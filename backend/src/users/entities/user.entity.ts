@@ -1,11 +1,11 @@
-import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity()
+@Entity('users')
 export class User {
-  @ObjectIdColumn()
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -14,25 +14,37 @@ export class User {
   @Column()
   passwordHash: string;
 
-  @Column()
-  role: 'customer' | 'seller' | 'admin';
+  @Column({
+    type: 'enum',
+    enum: ['customer', 'seller', 'admin'],
+    default: 'customer'
+  })
+  role: string;
 
-  @Column()
-  preferredLanguage: 'fa' | 'zh';
+  @Column({
+    type: 'enum',
+    enum: ['fa', 'zh'],
+    default: 'fa'
+  })
+  preferredLanguage: string;
 
-  @Column()
-  preferredCurrency: 'IRR' | 'CNY';
+  @Column({
+    type: 'enum', 
+    enum: ['IRR', 'CNY'],
+    default: 'IRR'
+  })
+  preferredCurrency: string;
 
-  @Column()
+  @Column({ default: true })
   isActive: boolean;
 
-  @Column()
+  @Column({ default: false })
   emailVerified: boolean;
 
-  @Column()
+  @Column({ default: false })
   phoneVerified: boolean;
 
-  // اطلاعات فروشنده (اگر نقش seller باشد)
+  // اطلاعات فروشنده
   @Column({ nullable: true })
   companyNameZh: string;
 
