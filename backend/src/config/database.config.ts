@@ -1,10 +1,10 @@
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('database', () => ({
-  type: 'mongodb',
-  url: process.env.MONGODB_URI || 'mongodb://localhost:27017/chinbino',
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: process.env.NODE_ENV !== 'production',
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  logging: process.env.NODE_ENV === 'development',
 }));
