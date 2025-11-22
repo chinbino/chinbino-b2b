@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -21,7 +22,8 @@ import databaseConfig from './config/database.config';
     }),
     UsersModule,
     ProductsModule,
+    AuthModule,  // ✅ اضافه شد
   ],
-  controllers: [AppController],  // ✅ اضافه شد
+  controllers: [AppController],
 })
 export class AppModule {}
