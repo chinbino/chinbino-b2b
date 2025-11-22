@@ -5,6 +5,11 @@ export default registerAs('database', () => ({
   url: process.env.DATABASE_URL,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: process.env.NODE_ENV !== 'production',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: true,  // ✅ تغییر به true
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,  // ✅ اضافه شد
+    },
+  },
   logging: process.env.NODE_ENV === 'development',
 }));
