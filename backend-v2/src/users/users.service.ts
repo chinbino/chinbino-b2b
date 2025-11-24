@@ -20,12 +20,10 @@ export class UsersService {
     role?: 'buyer' | 'seller' | 'admin';
   }): Promise<User> {
     
-    // بررسی وجود رمز عبور
     if (!userData.password) {
       throw new BadRequestException('رمز عبور الزامی است');
     }
 
-    // بررسی تکراری نبودن ایمیل
     if (userData.email) {
       const existingUser = await this.usersRepository.findOne({
         where: { email: userData.email }
@@ -35,7 +33,6 @@ export class UsersService {
       }
     }
 
-    // بررسی تکراری نبودن شماره تلفن
     if (userData.phone) {
       const existingUser = await this.usersRepository.findOne({
         where: { phone: userData.phone }
@@ -45,11 +42,9 @@ export class UsersService {
       }
     }
 
-    // هش کردن رمز عبور با بررسی اضافی
     const saltRounds = 12;
     const passwordHash = await bcrypt.hash(userData.password, saltRounds);
 
-    // ایجاد کاربر جدید
     const user = this.usersRepository.create({
       email: userData.email,
       phone: userData.phone,
@@ -58,6 +53,7 @@ export class UsersService {
       companyName: userData.companyName,
       role: userData.role || 'buyer',
       status: 'active',
+      isActive: true,
       isEmailVerified: false,
       isPhoneVerified: false,
       preferredLanguage: 'fa',
@@ -69,22 +65,19 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User | null> {
     return await this.usersRepository.findOne({ 
-      where: { email },
-      select: ['id', 'email', 'passwordHash', 'role', 'status', 'isActive']
+      where: { email: email }
     });
   }
 
   async findById(id: string): Promise<User | null> {
     return await this.usersRepository.findOne({ 
-      where: { id }
+      where: { id: id }
     });
   }
 
-  // 🆕 اضافه کردن متد findOne برای jwt.strategy
   async findOne(id: string): Promise<User | null> {
     return await this.usersRepository.findOne({ 
-      where: { id },
-      select: ['id', 'email', 'role', 'status', 'isActive']
+      where: { id: id }
     });
   }
 
