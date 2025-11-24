@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       console.log('User not found for ID:', payload.sub);
       throw new UnauthorizedException('User not found');
     }
-    if (!user.isActive) {
+    if (!user.isActive) { // ✅ استفاده از isActive
       throw new UnauthorizedException('User account is not active');
     }
     return user;
