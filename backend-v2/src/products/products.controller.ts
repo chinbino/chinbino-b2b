@@ -11,7 +11,7 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@Body() createProductDto: CreateProductDto, @Request() req) {
-    return this.productsService.create(createProductDto, req.user);
+    return this.productsService.create(createProductDto, req.user.id);
   }
 
   @Get()
@@ -22,7 +22,7 @@ export class ProductsController {
   @Get('my-products')
   @UseGuards(JwtAuthGuard)
   findMyProducts(@Request() req) {
-    return this.productsService.findBySeller(req.user.id);
+    return this.productsService.findSellerProducts(req.user.id);
   }
 
   @Get(':id')
@@ -33,12 +33,12 @@ export class ProductsController {
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @Request() req) {
-    return this.productsService.update(id, updateProductDto, req.user);
+    return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string, @Request() req) {
-    return this.productsService.remove(id, req.user);
+    return this.productsService.remove(id);
   }
 }
