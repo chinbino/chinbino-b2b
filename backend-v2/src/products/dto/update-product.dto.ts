@@ -1,50 +1,51 @@
-import { IsOptional, IsString, IsNumber, Min } from 'class-validator';
+import { IsString, IsNumber, IsPositive, Min, IsOptional, IsArray } from 'class-validator';
 
-export class UpdateProductDto {
+export class CreateProductDto {
   @IsString()
-  @IsOptional()
-  titleFa?: string;
-
-  @IsString()
-  @IsOptional()
-  titleZh?: string;
+  name: string;
 
   @IsString()
   @IsOptional()
-  titleEn?: string;
-
-  @IsString()
-  @IsOptional()
-  descriptionFa?: string;
-
-  @IsString()
-  @IsOptional()
-  descriptionZh?: string;
-
-  @IsString()
-  @IsOptional()
-  descriptionEn?: string;
+  description?: string;
 
   @IsNumber()
-  @Min(0)
-  @IsOptional()
-  basePriceCNY?: number;
-
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  basePriceIRR?: number;
-
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  stockUnit?: number;
+  @IsPositive()
+  price: number;
 
   @IsString()
   @IsOptional()
-  sku?: string;
+  category?: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  externalCode?: string;
+  images?: string[];
+
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  stockQuantity: number;
+
+  // فیلدهای جدید کارتن
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  unitsPerCarton: number;
+
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderCartons: number;
+
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderUnits: number;
+
+  @IsNumber()
+  @IsPositive()
+  cartonWeightKg: number;
+
+  @IsNumber()
+  @IsPositive()
+  cartonVolumeM3: number;
 }
