@@ -63,3 +63,9 @@ export class User {
   @Column({ nullable: true })
   lastLoginAt: Date;
 }
+
+import { Product } from '../../../products/entities/product.entity';
+
+// در داخل کلاس User، این رو اضافه کن:
+@OneToMany(() => Product, product => product.seller)
+products: Product[];
