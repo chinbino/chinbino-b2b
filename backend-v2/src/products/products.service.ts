@@ -1,8 +1,7 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from './entities/product.entity';
-import { User } from '../users/entities/user.entity';
+import { Product, ProductStatus } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -10,82 +9,71 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private productsRepository: Repository<Product>,
+    private readonly productsRepository: Repository<Product>,
   ) {}
 
-  async create(createProductDto: CreateProductDto, seller: User): Promise<Product> {
+  async create(createProductDto: CreateProductDto, sellerId: string) {
     const product = this.productsRepository.create({
       ...createProductDto,
-      seller: seller,
-      status: 'active',
+      seller: { id: sellerId },
+      status: ProductStatus.ACTIVE,
     });
 
     return await this.productsRepository.save(product);
   }
 
-  async findAll(): Promise<Product[]> {
+  async findAll() {
     return await this.productsRepository.find({
-      where: { status: 'active' },
+      where: { status: ProductStatus.ACTIVE },
       relations: ['seller'],
-      order: { createdAt: 'DESC' },
     });
   }
 
-  async findOne(id: string): Promise<Product> {
+  async findOne(id: string) {
     const product = await this.productsRepository.findOne({
-      where: { id, status: 'active' },
+      where: { id, status: ProductStatus.ACTIVE },
       relations: ['seller'],
     });
 
     if (!product) {
-      throw new NotFoundException('محصول یافت نشد');
+      throw new NotFoundException('Product not found');
     }
 
     return product;
   }
 
-  async update(id: string, updateData: UpdateProductDto, seller: User): Promise<Product> {
-    const product = await this.productsRepository.findOne({
-      where: { id },
-      relations: ['seller'],
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.findOne(id);
+    
+    const updated = await this.productsRepository.preload({
+      id: product.id,
+      ...updateProductDto,
     });
 
-    if (!product) {
-      throw new NotFoundException('محصول یافت نشد');
+    if (!updated) {
+      throw new NotFoundException('Product not found');
     }
 
-    if (product.seller.id !== seller.id) {
-      throw new ForbiddenException('شما مجوز ویرایش این محصول را ندارید');
-    }
-
-    await this.productsRepository.update(id, updateData);
-    return await this.productsRepository.findOne({ where: { id } });
+    return await this.productsRepository.save(updated);
   }
 
-  async remove(id: string, seller: User): Promise<void> {
-    const product = await this.productsRepository.findOne({
-      where: { id },
-      relations: ['seller'],
+  async remove(id: string) {
+    const product = await this.findOne(id);
+    
+    await this.productsRepository.update(id, { 
+      status: ProductStatus.INACTIVE 
     });
 
-    if (!product) {
-      throw new NotFoundException('محصول یافت نشد');
-    }
-
-    if (product.seller.id !== seller.id) {
-      throw new ForbiddenException('شما مجوز حذف این محصول را ندارید');
-    }
-
-    await this.productsRepository.update(id, { status: 'inactive' });
+    return { message: 'Product deleted successfully' };
   }
 
-  async findBySeller(sellerId: string): Promise<Product[]> {
+  async findSellerProducts(sellerId: string) {
     return await this.productsRepository.find({
       where: { 
         seller: { id: sellerId },
-        status: 'active'
+        status: ProductStatus.ACTIVE 
       },
-      order: { createdAt: 'DESC' },
+      relations: ['seller'],
     });
   }
 }
