@@ -75,9 +75,11 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User | null> {
+    // ❌ قدیمی: بدون فیلد status
+    // ✅ جدید: همه فیلدها یا حداقل فیلدهای مورد نیاز
     return await this.usersRepository.findOne({ 
-      where: { id },
-      select: ['id', 'email', 'phone', 'role', 'fullName', 'companyName', 'preferredLanguage', 'preferredCurrency']
+      where: { id }
+      // select را حذف کن تا همه فیلدها برگردند
     });
   }
 
