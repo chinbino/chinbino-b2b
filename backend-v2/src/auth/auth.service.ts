@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 
@@ -17,8 +17,22 @@ export class AuthService {
     companyName?: string;
     role?: 'buyer' | 'seller';
   }) {
+    // بررسی وجود رمز عبور
+    console.log('Register Data received:', registerData); // برای دیباگ
+    
+    if (!registerData.password) {
+      throw new BadRequestException('رمز عبور الزامی است');
+    }
+
     // ایجاد کاربر جدید
-    const user = await this.usersService.create(registerData);
+    const user = await this.usersService.create({
+      email: registerData.email,
+      phone: registerData.phone,
+      password: registerData.password, // مطمئن شو این خط درست باشه
+      fullName: registerData.fullName,
+      companyName: registerData.companyName,
+      role: registerData.role,
+    });
 
     // ایجاد توکن
     const payload = { 
