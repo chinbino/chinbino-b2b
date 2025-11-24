@@ -12,7 +12,6 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // اطلاعات پایه
   @Column()
   titleFa: string;
 
@@ -31,7 +30,6 @@ export class Product {
   @Column({ type: 'text', nullable: true })
   descriptionEn: string;
 
-  // قیمت‌گذاری
   @Column('decimal', { precision: 12, scale: 2 })
   basePriceCNY: number;
 
@@ -41,27 +39,25 @@ export class Product {
   @Column('decimal', { precision: 12, scale: 2, nullable: true })
   basePriceUSD: number;
 
-  // موجودی
   @Column({ default: 0 })
   stockUnit: number;
 
-  // 🆕 فیلدهای جدید کارتن (B2B)
+  // فیلدهای جدید کارتن
   @Column({ type: 'int', nullable: true })
-  unitsPerCarton: number; // تعداد واحد در هر کارتن
+  unitsPerCarton: number;
 
   @Column({ type: 'int', nullable: true })
-  minOrderCartons: number; // حداقل سفارش بر اساس کارتن
+  minOrderCartons: number;
 
   @Column({ type: 'int', nullable: true })
-  minOrderUnits: number; // حداقل سفارش بر اساس واحد
+  minOrderUnits: number;
 
   @Column('decimal', { precision: 8, scale: 2, nullable: true })
-  cartonWeightKg: number; // وزن هر کارتن (کیلوگرم)
+  cartonWeightKg: number;
 
   @Column('decimal', { precision: 10, scale: 4, nullable: true })
-  cartonVolumeM3: number; // حجم هر کارتن (متر مکعب)
+  cartonVolumeM3: number;
 
-  // وضعیت
   @Column({ 
     type: 'enum',
     enum: ProductStatus,
@@ -69,18 +65,15 @@ export class Product {
   })
   status: ProductStatus;
 
-  // روابط
   @ManyToOne(() => User, user => user.products)
   seller: User;
 
-  // زمان‌ها
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // 🆕 متدهای کمکی برای محاسبات کارتن
   calculateCartonQuantity(unitQuantity: number): number {
     if (!this.unitsPerCarton) return 0;
     return Math.ceil(unitQuantity / this.unitsPerCarton);
