@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -20,6 +20,11 @@ export class UsersService {
     role?: 'buyer' | 'seller' | 'admin';
   }): Promise<User> {
     
+    // بررسی وجود رمز عبور
+    if (!userData.password) {
+      throw new BadRequestException('رمز عبور الزامی است');
+    }
+
     // بررسی تکراری نبودن ایمیل
     if (userData.email) {
       const existingUser = await this.usersRepository.findOne({
@@ -40,15 +45,23 @@ export class UsersService {
       }
     }
 
-    // هش کردن رمز عبور
+    // هش کردن رمز عبور با بررسی اضافی
     const saltRounds = 12;
     const passwordHash = await bcrypt.hash(userData.password, saltRounds);
 
+    // ایجاد کاربر جدید
     const user = this.usersRepository.create({
-      ...userData,
-      passwordHash,
+      email: userData.email,
+      phone: userData.phone,
+      passwordHash: passwordHash,
+      fullName: userData.fullName,
+      companyName: userData.companyName,
       role: userData.role || 'buyer',
       status: 'active',
+      isEmailVerified: false,
+      isPhoneVerified: false,
+      preferredLanguage: 'fa',
+      preferredCurrency: 'IRR'
     });
 
     return await this.usersRepository.save(user);
