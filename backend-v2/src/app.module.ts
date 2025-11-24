@@ -4,18 +4,21 @@ import { AppController } from './app.controller';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { OrdersModule } from './orders/orders.module'; // اضافه کردن این خط
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      // ... تنظیمات موجود
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      synchronize: process.env.NODE_ENV !== 'production',
+      autoLoadEntities: true,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     ProductsModule,
-    UsersModule, 
+    UsersModule,
     AuthModule,
-    OrdersModule, // اضافه کردن این خط
+    OrdersModule,
   ],
   controllers: [AppController],
 })
