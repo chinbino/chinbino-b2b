@@ -70,16 +70,21 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return await this.usersRepository.findOne({ 
       where: { email },
-      select: ['id', 'email', 'passwordHash', 'role', 'status']
+      select: ['id', 'email', 'passwordHash', 'role', 'status', 'isActive']
     });
   }
 
   async findById(id: string): Promise<User | null> {
-    // ❌ قدیمی: بدون فیلد status
-    // ✅ جدید: همه فیلدها یا حداقل فیلدهای مورد نیاز
     return await this.usersRepository.findOne({ 
       where: { id }
-      // select را حذف کن تا همه فیلدها برگردند
+    });
+  }
+
+  // 🆕 اضافه کردن متد findOne برای jwt.strategy
+  async findOne(id: string): Promise<User | null> {
+    return await this.usersRepository.findOne({ 
+      where: { id },
+      select: ['id', 'email', 'role', 'status', 'isActive']
     });
   }
 
