@@ -1,11 +1,10 @@
 {
-  "name": "chinbino-b2b",
-  "version": "1.0.0",
-  "description": "B2B Platform for China-Iran Trade",
   "scripts": {
-    "dev": "cd backend && npm run start:dev",
-    "build": "cd backend && npm run build",
-    "start": "cd backend && npm run start:prod"
-  },
-  "dependencies": {}
+    "build": "nest build",
+    "start": "npm run migration:run && node dist/src/main",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
+    "migration:generate": "npx typeorm-ts-node-commonjs migration:generate -d src/data-source.ts"
+  }
 }
