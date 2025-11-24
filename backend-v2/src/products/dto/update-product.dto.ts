@@ -1,4 +1,3 @@
-// backend-v2/src/products/dto/update-product.dto.ts
 import { IsOptional, IsString, IsNumber, Min } from 'class-validator';
 
 export class UpdateProductDto {
@@ -18,6 +17,14 @@ export class UpdateProductDto {
   @IsOptional()
   descriptionFa?: string;
 
+  @IsString()
+  @IsOptional()
+  descriptionZh?: string;
+
+  @IsString()
+  @IsOptional()
+  descriptionEn?: string;
+
   @IsNumber()
   @Min(0)
   @IsOptional()
@@ -26,5 +33,18 @@ export class UpdateProductDto {
   @IsNumber()
   @Min(0)
   @IsOptional()
+  basePriceIRR?: number;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
   stockUnit?: number;
+
+  @IsString()
+  @IsOptional()
+  sku?: string;
+
+  @IsString()
+  @IsOptional()
+  externalCode?: string;
 }
