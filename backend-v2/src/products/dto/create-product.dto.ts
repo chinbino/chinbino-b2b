@@ -1,29 +1,51 @@
-// backend-v2/src/products/dto/create-product.dto.ts
-import { IsString, IsNumber, IsOptional, Min, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsPositive, Min, IsOptional, IsArray } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
-  @IsNotEmpty()
-  titleFa: string;
+  name: string;
 
   @IsString()
   @IsOptional()
-  titleZh?: string;
-
-  @IsString()
-  @IsOptional()
-  titleEn?: string;
-
-  @IsString()
-  @IsOptional()
-  descriptionFa?: string;
+  description?: string;
 
   @IsNumber()
-  @Min(0)
-  basePriceCNY: number;
+  @IsPositive()
+  price: number;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsArray()
+  @IsOptional()
+  images?: string[];
 
   @IsNumber()
-  @Min(0)
-  @IsOptional()
-  stockUnit?: number;
+  @IsPositive()
+  @Min(1)
+  stockQuantity: number;
+
+  // فیلدهای جدید کارتن
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  unitsPerCarton: number;
+
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderCartons: number;
+
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderUnits: number;
+
+  @IsNumber()
+  @IsPositive()
+  cartonWeightKg: number;
+
+  @IsNumber()
+  @IsPositive()
+  cartonVolumeM3: number;
 }
