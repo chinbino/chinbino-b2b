@@ -1,28 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import databaseConfig from './config/database.config';
+import { OrdersModule } from './orders/orders.module'; // اضافه کردن این خط
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [databaseConfig],
-      isGlobal: true,
+    TypeOrmModule.forRoot({
+      // ... تنظیمات موجود
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database'),
-      }),
-      inject: [ConfigService],
-    }),
-    UsersModule,
     ProductsModule,
-    AuthModule,  // ✅ اضافه شد
+    UsersModule, 
+    AuthModule,
+    OrdersModule, // اضافه کردن این خط
   ],
   controllers: [AppController],
 })
