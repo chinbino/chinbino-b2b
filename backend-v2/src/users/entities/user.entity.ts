@@ -29,6 +29,10 @@ export class User {
   })
   status: string;
 
+  // 🆕 اضافه کردن فیلد isActive
+  @Column({ default: true })
+  isActive: boolean;
+
   @Column({ nullable: true })
   fullName: string;
 
