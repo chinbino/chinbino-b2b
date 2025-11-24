@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity('users')
 export class User {
@@ -62,10 +63,7 @@ export class User {
 
   @Column({ nullable: true })
   lastLoginAt: Date;
+
+  @OneToMany(() => Product, product => product.seller)
+  products: Product[];
 }
-
-import { Product } from '../../../products/entities/product.entity';
-
-// در داخل کلاس User، این رو اضافه کن:
-@OneToMany(() => Product, product => product.seller)
-products: Product[];
