@@ -27,7 +27,10 @@ export enum ContentStatus {
 @Index('IDX_contents_type_status', ['type', 'status'])
 @Index('IDX_contents_published_at', ['publishedAt'])
 export class Content {
-
+  
+  // ✅ PRIMARY COLUMN ADDED - این خط رو اضافه کردم
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({
     type: 'enum',
