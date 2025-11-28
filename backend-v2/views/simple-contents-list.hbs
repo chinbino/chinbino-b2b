@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>لیست محتواها - ساده</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .header { background: #f0f0f0; padding: 20px; margin-bottom: 20px; }
+        .content-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>لیست محتواها (نسخه ساده)</h1>
+        <a href="/admin/contents/new">➕ محتوای جدید</a>
+        <a href="/admin/test" style="margin-right: 20px;">🧪 تست</a>
+    </div>
+
+    {{#if success}}
+        <p class="success">✅ تعداد محتواها: {{contents.length}}</p>
+        
+        {{#each contents}}
+        <div class="content-item">
+            <h3>{{this.title.fa}} (ID: {{this.id}})</h3>
+            <p><strong>Slug:</strong> {{this.slug}} | <strong>Type:</strong> {{this.type}} | <strong>Status:</strong> {{this.status}}</p>
+            <p>
+                <a href="/admin/contents/{{this.id}}/edit">✏️ ویرایش</a> | 
+                <a href="/admin/contents/{{this.id}}/preview">👁️ پیش‌نمایش</a> | 
+                <a href="/admin/contents/{{this.id}}/json">🔍 JSON</a>
+            </p>
+        </div>
+        {{/each}}
+
+        {{#unless contents.length}}
+        <p>هیچ محتوایی یافت نشد</p>
+        {{/unless}}
+    {{else}}
+        <p class="error">❌ خطا: {{error}}</p>
+    {{/if}}
+</body>
+</html>
