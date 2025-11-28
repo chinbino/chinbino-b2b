@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Put, Param, Body, Query, Res, Render, NotFoundException } from '@nestjs/common';
 import { Response } from 'express';
-import { ContentService } from '../../../cms/services/content.service';
-import { BlockRendererService } from '../../../cms/services/block-renderer.service';
-import { CreateContentDto } from '../../../cms/dto/create-content.dto';
+import { ContentService } from '../../cms/services/content.service';
+import { BlockRendererService } from '../../cms/services/block-renderer.service';
+import { CreateContentDto } from '../../cms/dto/create-content.dto';
 
 @Controller('admin')
 export class AdminContentsController {
@@ -59,7 +59,7 @@ export class AdminContentsController {
         blocks: body.blocks ? JSON.parse(body.blocks) : []
       };
 
-      await this.contentService.create(createDto, 'admin-user-id'); // TODO: replace with actual user ID
+      await this.contentService.create(createDto, 'admin-user-id');
       res.redirect('/admin/contents');
     } catch (error) {
       res.redirect('/admin/contents/new?error=' + encodeURIComponent(error.message));
@@ -106,7 +106,7 @@ export class AdminContentsController {
         blocks: body.blocks ? JSON.parse(body.blocks) : []
       };
 
-      await this.contentService.update(+id, updateData, 'admin-user-id'); // TODO: replace with actual user ID
+      await this.contentService.update(+id, updateData, 'admin-user-id');
       res.redirect('/admin/contents');
     } catch (error) {
       res.redirect(`/admin/contents/${id}/edit?error=` + encodeURIComponent(error.message));
