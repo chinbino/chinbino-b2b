@@ -5,6 +5,7 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms/cms.module';
+import { AdminModule } from './admin/admin.module'; // ✅ اضافه شد
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { CmsModule } from './cms/cms.module';
     ProductsModule,
     UsersModule,
     AuthModule,
-    CmsModule, // ✅ فعال شد
+    CmsModule,
+    AdminModule, // ✅ اضافه شد
   ],
   controllers: [AppController],
 })
