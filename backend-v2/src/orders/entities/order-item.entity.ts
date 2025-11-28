@@ -1,3 +1,6 @@
+// @ManyToOne(() => SellerOrder, sellerOrder => sellerOrder.items)
+// sellerOrder: SellerOrder;
+
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
