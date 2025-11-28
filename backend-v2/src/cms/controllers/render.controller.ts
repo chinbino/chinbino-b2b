@@ -19,8 +19,8 @@ export class RenderController {
       throw new NotFoundException('Content not found');
     }
 
-    // ✅ اصلاح: فقط یک پارامتر ارسال می‌کنیم
-    const bodyHtml = this.blockRenderer.renderBlocks(content.blocks);
+    // ✅ اصلاح: اضافه کردن await
+    const bodyHtml = await this.blockRenderer.renderBlocks(content.blocks);
 
     const seo = content.seo || {};
 
