@@ -11,6 +11,13 @@ export class AdminContentsController {
     private readonly blockRenderer: BlockRendererService,
   ) {}
 
+  // ✅ متد تست اضافه شد
+  @Get('test')
+  @Render('test')
+  test() {
+    return { message: 'Admin test successful - Handlebars is working' };
+  }
+
   // 📋 لیست محتواها
   @Get('contents')
   @Render('admin/contents-list')
