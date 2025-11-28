@@ -5,7 +5,7 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 // import { OrdersModule } from './orders/orders.module'; // ❌ موقتاً غیرفعال
-import { CmsModule } from './cms/cms.module';
+// import { CmsModule } from './cms/cms.module'; // ❌ موقتاً غیرفعال - دلیل خطا
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { CmsModule } from './cms/cms.module';
     UsersModule,
     AuthModule,
     // OrdersModule, // ❌ موقتاً غیرفعال
-    CmsModule,
+    // CmsModule, // ❌ موقتاً غیرفعال - تا رفع خطای Entity
   ],
   controllers: [AppController],
 })
