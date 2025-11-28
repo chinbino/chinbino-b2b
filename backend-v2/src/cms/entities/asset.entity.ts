@@ -2,7 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 
 @Entity('assets')
 export class Asset {
-
+  @PrimaryGeneratedColumn() // ✅ اضافه کردن primary column
+  id: number;
 
   @Column()
   filename: string;
