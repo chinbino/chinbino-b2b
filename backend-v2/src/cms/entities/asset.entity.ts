@@ -8,7 +8,7 @@ export class Asset {
   @Column()
   filename: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'mime_type' })
   mimeType: string;
 
   @Column({ nullable: true })
@@ -26,6 +26,6 @@ export class Asset {
   @Column('jsonb', { nullable: true })
   metadata: any;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 }
