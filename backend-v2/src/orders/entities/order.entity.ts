@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from 'typeorm';
+// src/orders/entities/order.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { OrderItem } from './order-item.entity';
 import { User } from '../../users/entities/user.entity';
 import { OrderStatus, PaymentStatus } from './order-status.enum';
+import { SellerOrder } from './seller-order.entity';
 
 @Entity('orders')
 export class Order {
@@ -9,52 +11,62 @@ export class Order {
   id: string;
 
   @Column({ unique: true })
-  orderNumber: string; // شماره سفارش منحصر بفرد
+  orderNumber: string;
 
-  // خریدار
   @ManyToOne(() => User, user => user.orders)
   buyer: User;
 
-  // وضعیت‌ها
-  @Column({
-    type: 'enum',
-    enum: OrderStatus,
-    default: OrderStatus.PENDING
-  })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
-  @Column({
-    type: 'enum',
-    enum: PaymentStatus,
-    default: PaymentStatus.PENDING
-  })
+  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
   paymentStatus: PaymentStatus;
 
-  // محاسبات مالی
+  // فیلدهای چندارزی جدید
   @Column('decimal', { precision: 12, scale: 2 })
-  subtotal: number; // جمع کل بدون مالیات و حمل
-
-  @Column('decimal', { precision: 12, scale: 2, default: 0 })
-  taxAmount: number; // مالیات
-
-  @Column('decimal', { precision: 12, scale: 2, default: 0 })
-  shippingCost: number; // هزینه حمل
+  totalProductsCNY: number;
 
   @Column('decimal', { precision: 12, scale: 2 })
-  totalAmount: number; // جمع نهایی
+  totalProductsIRR: number;
 
-  // اطلاعات حمل و نقل
+  @Column('decimal', { precision: 12, scale: 2, default: 0 })
+  totalShippingCNY: number;
+
+  @Column('decimal', { precision: 12, scale: 2, default: 0 })
+  totalShippingIRR: number;
+
+  @Column('decimal', { precision: 12, scale: 2, default: 0 })
+  totalAddonsCNY: number;
+
+  @Column('decimal', { precision: 12, scale: 2, default: 0 })
+  totalAddonsIRR: number;
+
+  @Column('decimal', { precision: 12, scale: 2 })
+  grandTotalCNY: number;
+
+  @Column('decimal', { precision: 12, scale: 2 })
+  grandTotalIRR: number;
+
+  @Column({ default: 'CNY' })
+  baseCurrency: string;
+
+  @Column('decimal', { precision: 10, scale: 4 })
+  exchangeRateCNYToIRR: number;
+
+  // فیلدهای موجود
   @Column({ nullable: true })
   shippingAddress: string;
 
   @Column({ nullable: true })
   shippingMethod: string;
 
-  // آیتم‌های سفارش
   @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
   items: OrderItem[];
 
-  // زمان‌ها
+  // ارتباط جدید با SellerOrders
+  @OneToMany(() => SellerOrder, sellerOrder => sellerOrder.order)
+  sellerOrders: SellerOrder[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -69,10 +81,4 @@ export class Order {
 
   @Column({ nullable: true })
   deliveredAt: Date;
-
-  // متدهای کمکی
-  calculateTotal(): void {
-    this.subtotal = this.items.reduce((sum, item) => sum + item.totalPrice, 0);
-    this.totalAmount = this.subtotal + this.taxAmount + this.shippingCost;
-  }
 }
