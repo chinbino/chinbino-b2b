@@ -5,9 +5,12 @@ import { User } from '../../users/entities/user.entity';
 @Entity('content_revisions')
 @Index('IDX_content_revisions_content_id', ['content'])
 export class ContentRevision {
+  
+  // ✅ PRIMARY COLUMN ADDED
+  @PrimaryGeneratedColumn()
+  id: number;
 
-
- @ManyToOne(() => Content, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Content, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'content_id' })
   content: Content;
 
