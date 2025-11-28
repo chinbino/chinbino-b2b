@@ -42,7 +42,9 @@ export class OrdersService {
     // ایجاد آیتم‌های سفارش
 const orderItems = calculations.map(calc =>
   this.orderItemRepository.create({
-    order: { id: savedOrder.id },  // ✅ اصلاح شد - فقط ID رو پاس بده
+  order: { id: savedOrder[0].id }, // ✅ اگر آرایه‌ست
+    // یا اگر تک object هست:
+order: { id: savedOrder.id },
     product: { id: calc.product.id }, // اینم همینطور
     quantity: calc.quantity,
     cartonQuantity: calc.cartonQuantity,
