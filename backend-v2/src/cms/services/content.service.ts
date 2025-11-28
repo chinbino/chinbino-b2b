@@ -24,16 +24,22 @@ export class ContentService {
       throw new ConflictException('Slug already exists');
     }
 
-    // ایجاد محتوای جدید
-    const contentData = {
-      ...createContentDto,
-      author: { id: authorId },
-      publishedAt: createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null,
-    };
-
-    const content = this.contentRepository.create(contentData as any);
-
-    // رندر HTML اولیه (موقتاً غیرفعال)
+    // ایجاد محتوای جدید - بدون استفاده از create()
+    const content = new Content();
+    content.type = createContentDto.type;
+    content.title = createContentDto.title;
+    content.slug = createContentDto.slug;
+    content.status = createContentDto.status || ContentStatus.DRAFT;
+    content.author = { id: authorId } as any;
+    content.publishedAt = createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null;
+    content.excerpt = createContentDto.excerpt;
+    content.categories = createContentDto.categories;
+    content.tags = createContentDto.tags;
+    content.locales = createContentDto.locales;
+    content.seo = createContentDto.seo as any;
+    content.blocks = createContentDto.blocks;
+    
+    // رندر HTML اولیه
     if (content.blocks && content.blocks.length > 0) {
       content.renderedHtml = '<div>Rendered content will be here</div>';
     }
@@ -41,9 +47,9 @@ export class ContentService {
     const savedContent = await this.contentRepository.save(content);
 
     // ایجاد revision اولیه
-    await this.createRevision(savedContent as any, authorId);
+    await this.createRevision(savedContent, authorId);
 
-    return savedContent as any;
+    return savedContent;
   }
 
   async findBySlug(slug: string): Promise<Content> {
@@ -74,7 +80,7 @@ export class ContentService {
     // آپدیت محتوا
     Object.assign(content, updateData);
 
-    // رندر HTML جدید (موقتاً غیرفعال)
+    // رندر HTML جدید
     if (content.blocks && content.blocks.length > 0) {
       content.renderedHtml = '<div>Updated rendered content</div>';
     }
@@ -86,19 +92,17 @@ export class ContentService {
     return await this.contentRepository.save(content);
   }
 
-  private async createRevision(content: any, authorId: string): Promise<void> {
-    const revisionData = {
-      content: { id: content.id } as any,
-      blocks: content.blocks,
-      seo: content.seo,
-      meta: {
-        note: 'Auto-saved revision',
-        status: content.status,
-      },
-      author: { id: authorId } as any,
+  private async createRevision(content: Content, authorId: string): Promise<void> {
+    const revision = new ContentRevision();
+    revision.content = { id: content.id } as any;
+    revision.blocks = content.blocks;
+    revision.seo = content.seo;
+    revision.meta = {
+      note: 'Auto-saved revision',
+      status: content.status,
     };
+    revision.author = { id: authorId } as any;
 
-    const revision = this.contentRevisionRepository.create(revisionData as any);
     await this.contentRevisionRepository.save(revision);
   }
 }
