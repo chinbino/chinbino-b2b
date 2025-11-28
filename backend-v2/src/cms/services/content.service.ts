@@ -23,6 +23,20 @@ export class ContentService {
     });
   }
 
+  // ✅ متد findOne اضافه شد
+  async findOne(id: number): Promise<Content> {
+    const content = await this.contentRepository.findOne({
+      where: { id: id } as any,
+      relations: ['author', 'mainImage']
+    });
+
+    if (!content) {
+      throw new NotFoundException('Content not found');
+    }
+
+    return content;
+  }
+
   async create(createContentDto: CreateContentDto, authorId: string): Promise<Content> {
     // بررسی تکراری نبودن slug
     const existingContent = await this.contentRepository.findOne({
