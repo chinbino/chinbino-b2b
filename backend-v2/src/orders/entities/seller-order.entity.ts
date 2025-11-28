@@ -1,4 +1,3 @@
-// src/orders/entities/seller-order.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Order } from './order.entity';
 import { User } from '../../users/entities/user.entity';
@@ -41,7 +40,7 @@ export class SellerOrder {
   @Column('decimal', { precision: 12, scale: 2 })
   totalIRR: number;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.sellerOrder)
+  @OneToMany(() => OrderItem, orderItem => orderItem.order)
   items: OrderItem[];
 
   @CreateDateColumn()
