@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>پیش‌نمایش محتوا - ساده</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .header { background: #f0f0f0; padding: 15px; margin-bottom: 20px; }
+        .preview-area { border: 2px dashed #ccc; padding: 20px; min-height: 400px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>پیش‌نمایش محتوا (نسخه ساده)</h1>
+        <p>عنوان: {{content.title.fa}} | زبان: {{locale}}</p>
+        <a href="/admin/contents/{{content.id}}/edit">✏️ ویرایش</a> | 
+        <a href="/admin/contents">↩️ بازگشت</a>
+    </div>
+
+    {{#if success}}
+        <div class="preview-area">
+            {{{bodyHtml}}}
+        </div>
+    {{else}}
+        <p style="color: red;">❌ خطا: {{error}}</p>
+    {{/if}}
+</body>
+</html>
