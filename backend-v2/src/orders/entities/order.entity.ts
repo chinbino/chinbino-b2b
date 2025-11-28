@@ -13,7 +13,7 @@ export class Order {
   @Column({ unique: true })
   orderNumber: string;
 
-  @ManyToOne(() => User, user => user.orders)
+  @ManyToOne(() => User) // ✅ حذف user => user.orders
   buyer: User;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
