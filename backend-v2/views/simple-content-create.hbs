@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ایجاد محتوای جدید - ساده</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>ایجاد محتوای جدید (نسخه ساده)</h1>
+    <a href="/admin/contents">↩️ بازگشت به لیست</a>
+
+    <form method="POST" action="/admin/contents" style="margin-top: 20px;">
+        <div class="form-group">
+            <label>نوع محتوا:</label>
+            <select name="type" required>
+                {{#each contentTypes}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Slug:</label>
+            <input type="text" name="slug" required placeholder="example-page">
+        </div>
+
+        <div class="form-group">
+            <label>عنوان فارسی:</label>
+            <input type="text" name="title_fa" required placeholder="عنوان به فارسی">
+        </div>
+
+        <div class="form-group">
+            <label>وضعیت:</label>
+            <select name="status">
+                {{#each statusTypes}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>بلوک‌ها (JSON):</label>
+            <textarea name="blocks" rows="6" placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان"}, "level": 1}}]'></textarea>
+        </div>
+
+        <button type="submit">✅ ایجاد محتوا</button>
+    </form>
+</body>
+</html>
