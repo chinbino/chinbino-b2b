@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
-import { Order } from '../../orders/entities/order.entity';
+// import { Order } from '../../orders/entities/order.entity'; // ❌ کامنت کن
 
 @Entity('users')
 export class User {
@@ -71,6 +71,6 @@ export class User {
   @OneToMany(() => Product, product => product.seller)
   products: Product[];
 
-  @OneToMany(() => Order, order => order.buyer)
-  orders: Order[];
+  // @OneToMany(() => Order, order => order.buyer) // ❌ کامنت کن
+  // orders: Order[];
 }
