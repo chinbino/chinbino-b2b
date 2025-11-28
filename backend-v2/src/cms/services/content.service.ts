@@ -26,19 +26,21 @@ export class ContentService {
       throw new ConflictException('Slug already exists');
     }
 
-    // ایجاد محتوای جدید
-   const content = this.contentRepository.create({
-  ...createContentDto,
-  author: { id: authorId } as any,
-  publishedAt: createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null,
-} as any);
-    
+    // ایجاد محتوای جدید - با تعیین نوع واضح
+    const contentData = {
+      ...createContentDto,
+      author: { id: authorId },
+      publishedAt: createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null,
+    };
+
+    const content = this.contentRepository.create(contentData);
+
     // رندر HTML اولیه
     if (content.blocks && content.blocks.length > 0) {
       content.renderedHtml = await this.blockRendererService.renderBlocks(content.blocks);
     }
 
-   const savedContent = await this.contentRepository.save(content) as Content;
+    const savedContent = await this.contentRepository.save(content);
 
     // ایجاد revision اولیه
     await this.createRevision(savedContent, authorId);
@@ -87,7 +89,7 @@ export class ContentService {
   }
 
   private async createRevision(content: Content, authorId: string): Promise<void> {
-    const revision = this.contentRevisionRepository.create({
+    const revisionData = {
       content: { id: content.id } as any,
       blocks: content.blocks,
       seo: content.seo,
@@ -95,9 +97,10 @@ export class ContentService {
         note: 'Auto-saved revision',
         status: content.status,
       },
-      author: { id: authorId },
-    });
+      author: { id: authorId } as any,
+    };
 
+    const revision = this.contentRevisionRepository.create(revisionData);
     await this.contentRevisionRepository.save(revision);
   }
 }
