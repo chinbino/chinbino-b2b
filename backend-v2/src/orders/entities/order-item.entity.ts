@@ -1,10 +1,6 @@
-// @ManyToOne(() => SellerOrder, sellerOrder => sellerOrder.items)
-// sellerOrder: SellerOrder;
-
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
-import { SellerOrder } from './seller-order.entity';
 import { OrderItemAddon } from './order-item-addon.entity';
 
 @Entity('order_items')
@@ -15,9 +11,6 @@ export class OrderItem {
   @ManyToOne(() => Order, order => order.items, { onDelete: 'CASCADE' })
   order: Order;
 
-  @ManyToOne(() => SellerOrder, sellerOrder => sellerOrder.items)
-  sellerOrder: SellerOrder;
-
   @ManyToOne(() => Product, { eager: true })
   product: Product;
 
@@ -27,18 +20,15 @@ export class OrderItem {
   @Column('int')
   cartonQuantity: number;
 
-  // 🆕 فیلدهای چندارزی جدید
   @Column('decimal', { precision: 12, scale: 2 })
   unitPrice: number;
 
   @Column('decimal', { precision: 12, scale: 2 })
   totalPrice: number;
 
-  // Add-ons
   @OneToMany(() => OrderItemAddon, addon => addon.orderItem)
   addons: OrderItemAddon[];
 
-  // فیلدهای فیزیکی
   @Column('decimal', { precision: 8, scale: 2, nullable: true })
   totalWeight: number;
 
