@@ -27,12 +27,12 @@ export class ContentService {
     }
 
     // ایجاد محتوای جدید
-    const content = this.contentRepository.create({
-      ...createContentDto,
-      author: { id: authorId },
-      publishedAt: createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null,
-    });
-
+   const content = this.contentRepository.create({
+  ...createContentDto,
+  author: { id: authorId } as any,
+  publishedAt: createContentDto.status === ContentStatus.PUBLISHED ? new Date() : null,
+} as any);
+    
     // رندر HTML اولیه
     if (content.blocks && content.blocks.length > 0) {
       content.renderedHtml = await this.blockRendererService.renderBlocks(content.blocks);
