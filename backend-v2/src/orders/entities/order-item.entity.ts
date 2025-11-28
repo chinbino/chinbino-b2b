@@ -1,4 +1,3 @@
-// src/orders/entities/order-item.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
@@ -25,28 +24,16 @@ export class OrderItem {
   @Column('int')
   cartonQuantity: number;
 
-  // فیلدهای چندارزی جدید
+  // 🆕 فیلدهای چندارزی جدید
   @Column('decimal', { precision: 12, scale: 2 })
-  unitPriceCNY: number;
+  unitPrice: number;
 
   @Column('decimal', { precision: 12, scale: 2 })
-  unitPriceIRR: number;
-
-  @Column('decimal', { precision: 12, scale: 2 })
-  totalPriceCNY: number;
-
-  @Column('decimal', { precision: 12, scale: 2 })
-  totalPriceIRR: number;
+  totalPrice: number;
 
   // Add-ons
   @OneToMany(() => OrderItemAddon, addon => addon.orderItem)
   addons: OrderItemAddon[];
-
-  @Column('decimal', { precision: 12, scale: 2, default: 0 })
-  totalAddonsCNY: number;
-
-  @Column('decimal', { precision: 12, scale: 2, default: 0 })
-  totalAddonsIRR: number;
 
   // فیلدهای فیزیکی
   @Column('decimal', { precision: 8, scale: 2, nullable: true })
