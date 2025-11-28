@@ -38,7 +38,7 @@ export class ContentService {
       content.renderedHtml = await this.blockRendererService.renderBlocks(content.blocks);
     }
 
-    const savedContent = await this.contentRepository.save(content);
+   const savedContent = await this.contentRepository.save(content) as Content;
 
     // ایجاد revision اولیه
     await this.createRevision(savedContent, authorId);
@@ -61,7 +61,7 @@ export class ContentService {
 
   async update(id: number, updateData: Partial<Content>, authorId: string): Promise<Content> {
     const content = await this.contentRepository.findOne({
-      where: { id }
+      where: { id: id } as any
     });
 
     if (!content) {
@@ -88,7 +88,7 @@ export class ContentService {
 
   private async createRevision(content: Content, authorId: string): Promise<void> {
     const revision = this.contentRevisionRepository.create({
-      content: { id: content.id },
+      content: { id: content.id } as any,
       blocks: content.blocks,
       seo: content.seo,
       meta: {
