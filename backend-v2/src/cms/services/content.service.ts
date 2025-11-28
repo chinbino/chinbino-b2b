@@ -14,6 +14,15 @@ export class ContentService {
     private readonly contentRevisionRepository: Repository<ContentRevision>,
   ) {}
 
+  // ✅ متد findAll اضافه شد
+  async findAll(query: any = {}): Promise<Content[]> {
+    return await this.contentRepository.find({
+      where: query,
+      relations: ['author', 'mainImage'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
   async create(createContentDto: CreateContentDto, authorId: string): Promise<Content> {
     // بررسی تکراری نبودن slug
     const existingContent = await this.contentRepository.findOne({
@@ -94,7 +103,7 @@ export class ContentService {
 
   private async createRevision(content: Content, authorId: string): Promise<void> {
     const revision = new ContentRevision();
-   revision.content = { id: (content as any).id } as any;
+    revision.content = { id: (content as any).id } as any;
     revision.blocks = content.blocks;
     revision.seo = content.seo;
     revision.meta = {
