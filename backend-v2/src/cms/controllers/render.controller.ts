@@ -19,7 +19,9 @@ export class RenderController {
       throw new NotFoundException('Content not found');
     }
 
-    const bodyHtml = this.blockRenderer.renderBlocks(content.blocks, locale);
+    // ✅ اصلاح: فقط یک پارامتر ارسال می‌کنیم
+    const bodyHtml = this.blockRenderer.renderBlocks(content.blocks);
+
     const seo = content.seo || {};
 
     const metaTitle = seo.metaTitle?.[locale] || seo.metaTitle?.fa || content.title?.[locale] || content.title?.fa || '';
