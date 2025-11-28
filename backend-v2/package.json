@@ -24,8 +24,6 @@
     "bcrypt": "^5.1.0",
     "class-validator": "^0.13.2",
     "class-transformer": "^0.5.1",
-    
-    // ✅ این دو خط رو اضافه کردم:
     "hbs": "^4.2.0",
     "@types/hbs": "^4.0.1"
   },
