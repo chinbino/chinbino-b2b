@@ -46,7 +46,7 @@ const orderItems = calculations.map(calc => {
 
     await this.orderItemRepository.save(orderItems);
 
-    return await this.findOne(savedOrder.id, buyerId);
+   return await this.findOne((savedOrder as any).id, buyerId);
   }
 
   async findAll(buyerId: string) {
