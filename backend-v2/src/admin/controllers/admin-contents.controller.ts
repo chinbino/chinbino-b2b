@@ -11,30 +11,60 @@ export class AdminContentsController {
     private readonly blockRenderer: BlockRendererService,
   ) {}
 
-  // ✅ متد تست اضافه شد
+  // ✅ تست ساده
   @Get('test')
   @Render('test')
   test() {
     return { message: 'Admin test successful - Handlebars is working' };
   }
 
-  // 📋 لیست محتواها
-  @Get('contents')
-  @Render('admin/contents-list')
-  async listContents(@Query() query: any) {
-    const contents = await this.contentService.findAll(query);
+  // ✅ تست با Layout ساده
+  @Get('test-layout')
+  @Render('simple-layout')
+  testWithLayout() {
     return { 
-      contents,
-      filters: {
-        type: query.type || '',
-        status: query.status || ''
-      }
+      title: 'تست Layout',
+      body: '<p>این یک تست با Layout ساده است.</p><a href="/admin/contents">برو به لیست محتواها</a>'
     };
   }
 
-  // ➕ فرم ایجاد محتوا
+  // ✅ تست JSON (بدون View)
+  @Get('test-json')
+  testJson() {
+    return { 
+      status: 'success', 
+      message: 'Admin JSON endpoint is working',
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // 📋 لیست محتواها - نسخه ساده
+  @Get('contents')
+  @Render('simple-contents-list')
+  async listContents(@Query() query: any) {
+    try {
+      const contents = await this.contentService.findAll(query);
+      return { 
+        success: true,
+        contents,
+        filters: {
+          type: query.type || '',
+          status: query.status || ''
+        }
+      };
+    } catch (error) {
+      return { 
+        success: false,
+        error: error.message,
+        contents: [],
+        filters: {}
+      };
+    }
+  }
+
+  // ➕ فرم ایجاد محتوا - نسخه ساده
   @Get('contents/new')
-  @Render('admin/content-create')
+  @Render('simple-content-create')
   createForm() {
     return { 
       contentTypes: [
@@ -73,23 +103,34 @@ export class AdminContentsController {
     }
   }
 
-  // ✏️ فرم ویرایش
+  // ✏️ فرم ویرایش - نسخه ساده
   @Get('contents/:id/edit')
-  @Render('admin/content-edit')
+  @Render('simple-content-edit')
   async editForm(@Param('id') id: string) {
-    const content = await this.contentService.findOne(+id);
-    if (!content) {
-      throw new NotFoundException('Content not found');
-    }
+    try {
+      const content = await this.contentService.findOne(+id);
+      if (!content) {
+        throw new NotFoundException('Content not found');
+      }
 
-    return {
-      content,
-      contentTypes: [
-        'article', 'news', 'landing', 'landing_market', 
-        'product_showcase', 'faq_page', 'static_page'
-      ],
-      statusTypes: ['draft', 'published', 'archived']
-    };
+      return {
+        success: true,
+        content,
+        contentTypes: [
+          'article', 'news', 'landing', 'landing_market', 
+          'product_showcase', 'faq_page', 'static_page'
+        ],
+        statusTypes: ['draft', 'published', 'archived']
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        content: null,
+        contentTypes: [],
+        statusTypes: []
+      };
+    }
   }
 
   // ✅ آپدیت محتوا
@@ -120,17 +161,32 @@ export class AdminContentsController {
     }
   }
 
-  // 👁️ پیش‌نمایش
+  // 👁️ پیش‌نمایش - نسخه ساده
   @Get('contents/:id/preview')
-  @Render('admin/content-preview')
+  @Render('simple-content-preview')
   async preview(@Param('id') id: string, @Query('locale') locale: string = 'fa') {
-    const content = await this.contentService.findOne(+id);
-    if (!content) {
-      throw new NotFoundException('Content not found');
-    }
+    try {
+      const content = await this.contentService.findOne(+id);
+      if (!content) {
+        throw new NotFoundException('Content not found');
+      }
 
-    const bodyHtml = await this.blockRenderer.renderBlocks(content.blocks);
-    return { content, bodyHtml, locale };
+      const bodyHtml = await this.blockRenderer.renderBlocks(content.blocks);
+      return { 
+        success: true,
+        content, 
+        bodyHtml, 
+        locale 
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        content: null,
+        bodyHtml: '',
+        locale: 'fa'
+      };
+    }
   }
 
   // 🔍 JSON View (برای دیباگ)
