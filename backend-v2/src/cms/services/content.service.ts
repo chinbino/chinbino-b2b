@@ -94,7 +94,7 @@ export class ContentService {
 
   private async createRevision(content: Content, authorId: string): Promise<void> {
     const revision = new ContentRevision();
-    revision.content = { id: content.id } as any;
+   revision.content = { id: (content as any).id } as any;
     revision.blocks = content.blocks;
     revision.seo = content.seo;
     revision.meta = {
