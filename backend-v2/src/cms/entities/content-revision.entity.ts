@@ -7,7 +7,7 @@ import { User } from '../../users/entities/user.entity';
 export class ContentRevision {
 
 
-  @ManyToOne(() => Content, content => content.id, { onDelete: 'CASCADE' })
+ @ManyToOne(() => Content, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'content_id' })
   content: Content;
 
