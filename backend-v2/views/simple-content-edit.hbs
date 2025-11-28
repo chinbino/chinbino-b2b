@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ویرایش محتوا - ساده</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>ویرایش محتوا (نسخه ساده)</h1>
+    <a href="/admin/contents">↩️ بازگشت به لیست</a>
+
+    {{#if success}}
+    <form method="POST" action="/admin/contents/{{content.id}}/edit" style="margin-top: 20px;">
+        <div class="form-group">
+            <label>نوع محتوا:</label>
+            <select name="type" required>
+                {{#each contentTypes}}
+                <option value="{{this}}" {{#eq this ../content.type}}selected{{/eq}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Slug:</label>
+            <input type="text" name="slug" required value="{{content.slug}}">
+        </div>
+
+        <div class="form-group">
+            <label>عنوان فارسی:</label>
+            <input type="text" name="title_fa" required value="{{content.title.fa}}">
+        </div>
+
+        <div class="form-group">
+            <label>وضعیت:</label>
+            <select name="status">
+                {{#each statusTypes}}
+                <option value="{{this}}" {{#eq this ../content.status}}selected{{/eq}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>بلوک‌ها (JSON):</label>
+            <textarea name="blocks" rows="12">{{json content.blocks}}</textarea>
+        </div>
+
+        <button type="submit">💾 ذخیره تغییرات</button>
+        <a href="/admin/contents/{{content.id}}/preview">👁️ پیش‌نمایش</a>
+    </form>
+    {{else}}
+        <p style="color: red;">❌ خطا: {{error}}</p>
+    {{/if}}
+</body>
+</html>
