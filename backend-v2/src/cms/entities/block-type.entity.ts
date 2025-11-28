@@ -8,6 +8,6 @@ export class BlockType {
   @Column('jsonb')
   schema: any;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 }
