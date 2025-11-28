@@ -4,8 +4,7 @@ import { AppController } from './app.controller';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-// import { OrdersModule } from './orders/orders.module'; // ❌ موقتاً غیرفعال
-// import { CmsModule } from './cms/cms.module'; // ❌ موقتاً غیرفعال - دلیل خطا
+import { CmsModule } from './cms/cms.module';
 
 @Module({
   imports: [
@@ -19,8 +18,7 @@ import { AuthModule } from './auth/auth.module';
     ProductsModule,
     UsersModule,
     AuthModule,
-    // OrdersModule, // ❌ موقتاً غیرفعال
-    // CmsModule, // ❌ موقتاً غیرفعال - تا رفع خطای Entity
+    CmsModule, // ✅ فعال شد
   ],
   controllers: [AppController],
 })
