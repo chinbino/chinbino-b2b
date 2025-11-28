@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Asset } from './asset.entity';
 
@@ -27,8 +27,6 @@ export enum ContentStatus {
 @Index('IDX_contents_type_status', ['type', 'status'])
 @Index('IDX_contents_published_at', ['publishedAt'])
 export class Content {
-  
-  // ✅ PRIMARY COLUMN ADDED - این خط رو اضافه کردم
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -39,7 +37,7 @@ export class Content {
   type: ContentType;
 
   @Column('jsonb')
-  title: Record<string, string>; // { "fa": "...", "en": "..." }
+  title: Record<string, string>;
 
   @Column({ unique: true })
   slug: string;
@@ -90,7 +88,7 @@ export class Content {
   mainImage: Asset;
 
   @Column('jsonb')
-  blocks: any[]; // آرایه‌ای از بلوک‌ها
+  blocks: any[];
 
   @Column('text', { nullable: true })
   renderedHtml: string;
