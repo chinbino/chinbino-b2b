@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContentController } from './controllers/content.controller';
+import { RenderController } from './controllers/render.controller'; // ✅ اضافه شد
 import { ContentService } from './services/content.service';
 import { BlockRendererService } from './services/block-renderer.service';
 import { Content } from './entities/content.entity';
@@ -12,7 +13,7 @@ import { BlockType } from './entities/block-type.entity';
   imports: [
     TypeOrmModule.forFeature([Content, ContentRevision, Asset, BlockType]),
   ],
-  controllers: [ContentController],
+  controllers: [ContentController, RenderController], // ✅ RenderController اضافه شد
   providers: [ContentService, BlockRendererService],
   exports: [ContentService],
 })
