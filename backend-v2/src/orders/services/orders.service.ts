@@ -31,20 +31,18 @@ export class OrdersService {
     const savedOrder = await this.orderRepository.save(order);
 
     // ایجاد آیتم‌های سفارش
-const orderItems = calculations.map(calc =>
-  this.orderItemRepository.create({
-  order: { id: savedOrder[0].id }, // ✅ اگر آرایه‌ست
-    // یا اگر تک object هست:
-order: { id: savedOrder.id },
-    product: { id: calc.product.id }, // اینم همینطور
-    quantity: calc.quantity,
-    cartonQuantity: calc.cartonQuantity,
-    unitPrice: calc.unitPrice,
-    totalPrice: calc.totalPrice,
-    totalWeight: calc.totalWeight,
-    totalVolume: calc.totalVolume,
-  })
-);
+const orderItems = calculations.map(calc => {
+  const orderItem = new OrderItem();
+  orderItem.order = savedOrder as any;
+  orderItem.product = calc.product as any;
+  orderItem.quantity = calc.quantity;
+  orderItem.cartonQuantity = calc.cartonQuantity;
+  orderItem.unitPrice = calc.unitPrice;
+  orderItem.totalPrice = calc.totalPrice;
+  orderItem.totalWeight = calc.totalWeight;
+  orderItem.totalVolume = calc.totalVolume;
+  return orderItem;
+});
 
     await this.orderItemRepository.save(orderItems);
 
