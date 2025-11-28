@@ -25,18 +25,9 @@ export class OrdersService {
 
     // ایجاد سفارش
     const order = this.orderRepository.create({
-      buyer: { id: buyerId },
-      orderNumber: this.generateOrderNumber(),
-      status: OrderStatus.PENDING,
-      paymentStatus: PaymentStatus.PENDING,
-      subtotal: summary.subtotal,
-      shippingCost: summary.shippingCost,
-      taxAmount: summary.taxAmount,
-      totalAmount: summary.totalAmount,
-      shippingAddress: createOrderDto.shippingAddress,
-      shippingMethod: createOrderDto.shippingMethod,
-    });
-
+  buyer: { id: buyerId },
+  // ...
+});
     const savedOrder = await this.orderRepository.save(order);
 
     // ایجاد آیتم‌های سفارش
