@@ -5,8 +5,7 @@ import { User } from '../../users/entities/user.entity';
 @Entity('content_revisions')
 @Index('IDX_content_revisions_content_id', ['content'])
 export class ContentRevision {
-  @PrimaryGeneratedColumn('bigint')
-  id: number;
+
 
   @ManyToOne(() => Content, content => content.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'content_id' })
