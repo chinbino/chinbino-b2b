@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ContentService } from '../services/content.service';
 import { CreateContentDto } from '../dto/create-content.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -22,6 +22,11 @@ export class ContentController {
       }
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  @Get()
+  async findAll(@Query() query: any): Promise<Content[]> {
+    return await this.contentService.findAll(query);
   }
 
   @Get(':slug')
