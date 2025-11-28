@@ -2,8 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 
 @Entity('assets')
 export class Asset {
-  @PrimaryGeneratedColumn('bigint')
-  id: number;
+
 
   @Column()
   filename: string;
