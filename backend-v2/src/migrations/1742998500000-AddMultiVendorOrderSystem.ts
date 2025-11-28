@@ -297,10 +297,16 @@ export class AddMultiVendorOrderSystem1742998500000 implements MigrationInterfac
     // حذف foreign keys
     await queryRunner.dropForeignKey('order_items', 'FK_order_items_seller_order');
     await queryRunner.dropForeignKey('order_item_addons', 'FK_order_item_addons_order_item');
-    await queryRunner.dropForeignKeys('seller_orders', [
-      'FK_seller_orders_order',
-      'FK_seller_orders_seller'
-    ]);
+    const sellerOrderTable = await queryRunner.getTable('seller_orders');
+const orderForeignKey = sellerOrderTable.foreignKeys.find(fk => fk.columnNames.indexOf('orderId') !== -1);
+const sellerForeignKey = sellerOrderTable.foreignKeys.find(fk => fk.columnNames.indexOf('sellerId') !== -1);
+
+if (orderForeignKey) {
+  await queryRunner.dropForeignKey('seller_orders', orderForeignKey);
+}
+if (sellerForeignKey) {
+  await queryRunner.dropForeignKey('seller_orders', sellerForeignKey);
+}
 
     // حذف فیلدهای جدید
     await queryRunner.dropColumns('order_items', [
