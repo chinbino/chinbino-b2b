@@ -1,4 +1,8 @@
 {
+  "dependencies": {
+    "hbs": "^4.2.0",
+    "@types/hbs": "^4.2.0"
+  },
   "scripts": {
     "build": "nest build",
     "start": "npm run migration:run && node dist/src/main",
