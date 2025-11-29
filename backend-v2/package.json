@@ -1,10 +1,40 @@
 {
+  "name": "chinbino-backend-v2",
+  "version": "1.0.0",
+  "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
-    "build": "nest build",
-    "start": "nest start --port $PORT",
-    "start:dev": "nest start --watch",
-    "start:prod": "nest start --port $PORT",
+    "build": "npx nest build",
+    "start": "node dist/src/main",
+    "start:dev": "npx nest start --watch",
+    "start:debug": "npx nest start --debug --watch",
+    "start:prod": "node dist/src/main",
     "migration:run": "echo 'Migrations temporarily disabled' && exit 0",
     "migration:generate": "echo 'Migrations temporarily disabled'"
+  },
+  "dependencies": {
+    "@nestjs/common": "^8.4.7",
+    "@nestjs/core": "^8.4.7",
+    "@nestjs/platform-express": "^8.4.7",
+    "@nestjs/typeorm": "^8.1.4",
+    "@nestjs/jwt": "^8.0.1",
+    "@nestjs/passport": "^8.2.2",
+    "@nestjs/config": "^1.2.1",
+    "typeorm": "^0.3.12",
+    "pg": "^8.8.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "bcrypt": "^5.1.0",
+    "class-validator": "^0.13.2",
+    "class-transformer": "^0.5.1",
+    "hbs": "^4.2.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^8.2.8",
+    "@types/bcrypt": "^5.0.0",
+    "@types/passport-jwt": "^3.0.9",
+    "@types/passport-local": "^1.0.35",
+    "@types/hbs": "^4.0.1"
   }
 }
