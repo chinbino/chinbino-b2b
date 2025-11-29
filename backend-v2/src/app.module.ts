@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms/cms.module';
-import { AdminModule } from './admin/admin.module'; // ✅ اضافه شد
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -20,8 +21,9 @@ import { AdminModule } from './admin/admin.module'; // ✅ اضافه شد
     UsersModule,
     AuthModule,
     CmsModule,
-    AdminModule, // ✅ اضافه شد
+    AdminModule,
   ],
   controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
