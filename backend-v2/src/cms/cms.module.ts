@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Content } from './entities/content.entity';
 import { ContentRevision } from './entities/content-revision.entity';
+import { Asset } from './entities/asset.entity'; // ✅ اضافه شود
 import { ContentService } from './services/content.service';
 import { BlockRendererService } from './services/block-renderer.service';
 import { RenderController } from './controllers/render.controller';
@@ -9,7 +10,11 @@ import { PublicPagesController } from './controllers/public-pages.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Content, ContentRevision]),
+    TypeOrmModule.forFeature([
+      Content, 
+      ContentRevision,
+      Asset // ✅ اضافه شود
+    ]),
   ],
   controllers: [
     RenderController, 
