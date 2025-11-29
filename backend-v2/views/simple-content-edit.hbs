@@ -1,59 +1,302 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl" lang="fa">
 <head>
-    <title>ویرایش محتوا - ساده</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایش محتوا - {{content.title.fa}}</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
-        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-right: 10px; }
+        body {
+            font-family: Tahoma, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: Tahoma, sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .form-col {
+            flex: 1;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input {
+            width: auto;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .content-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .content-info strong {
+            color: #495057;
+        }
     </style>
 </head>
 <body>
-    <h1>ویرایش محتوا (نسخه ساده)</h1>
-    <a href="/admin/contents">↩️ بازگشت به لیست</a>
+    <div class="container">
+        <h1>ویرایش محتوا: {{content.title.fa}}</h1>
 
-    {{#if success}}
-    <form method="POST" action="/admin/contents/{{content.id}}/edit" style="margin-top: 20px;">
-        <div class="form-group">
-            <label>نوع محتوا:</label>
-            <select name="type" required>
-                {{#each contentTypes}}
-                <option value="{{this}}" {{#eq this ../content.type}}selected{{/eq}}>{{this}}</option>
-                {{/each}}
-            </select>
+        {{#if error}}
+        <div class="error-message">
+            ❌ خطا: {{error}}
+        </div>
+        {{/if}}
+
+        {{#if success}}
+        <div class="content-info">
+            <strong>اطلاعات محتوا:</strong> 
+            ID: {{content.id}} | 
+            ایجاد شده در: {{formatDate content.createdAt}} | 
+            آخرین ویرایش: {{formatDate content.updatedAt}}
         </div>
 
-        <div class="form-group">
-            <label>Slug:</label>
-            <input type="text" name="slug" required value="{{content.slug}}">
-        </div>
+        <form method="POST" action="/admin/contents/{{content.id}}/edit">
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="type" class="required">نوع محتوا:</label>
+                        <select name="type" id="type" required>
+                            {{#each contentTypes}}
+                            <option value="{{this}}" {{#eq this ../content.type}}selected{{/eq}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="status" class="required">وضعیت:</label>
+                        <select name="status" id="status" required>
+                            {{#each statusTypes}}
+                            <option value="{{this}}" {{#eq this ../content.status}}selected{{/eq}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label>عنوان فارسی:</label>
-            <input type="text" name="title_fa" required value="{{content.title.fa}}">
-        </div>
+            <div class="form-group">
+                <label for="slug" class="required">Slug:</label>
+                <input type="text" name="slug" id="slug" required 
+                       value="{{content.slug}}"
+                       pattern="[a-zA-Z0-9-]+" 
+                       title="فقط حروف انگلیسی، اعداد و خط تیره مجاز است">
+                <div class="help-text">فقط حروف انگلیسی، اعداد و خط تیره مجاز است</div>
+            </div>
 
-        <div class="form-group">
-            <label>وضعیت:</label>
-            <select name="status">
-                {{#each statusTypes}}
-                <option value="{{this}}" {{#eq this ../content.status}}selected{{/eq}}>{{this}}</option>
-                {{/each}}
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="title_fa" class="required">عنوان فارسی:</label>
+                <input type="text" name="title_fa" id="title_fa" required 
+                       value="{{content.title.fa}}"
+                       placeholder="عنوان محتوا به فارسی">
+            </div>
 
-        <div class="form-group">
-            <label>بلوک‌ها (JSON):</label>
-            <textarea name="blocks" rows="12">{{json content.blocks}}</textarea>
-        </div>
+            <div class="form-group">
+                <label for="title_en">عنوان انگلیسی (اختیاری):</label>
+                <input type="text" name="title_en" id="title_en" 
+                       value="{{content.title.en}}"
+                       placeholder="English title">
+            </div>
 
-        <button type="submit">💾 ذخیره تغییرات</button>
-        <a href="/admin/contents/{{content.id}}/preview">👁️ پیش‌نمایش</a>
-    </form>
-    {{else}}
-        <p style="color: red;">❌ خطا: {{error}}</p>
-    {{/if}}
+            <div class="form-group">
+                <label for="excerpt_fa">چکیده فارسی:</label>
+                <textarea name="excerpt_fa" id="excerpt_fa" 
+                          placeholder="خلاصه کوتاه از محتوا به فارسی">{{content.excerpt.fa}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="excerpt_en">چکیده انگلیسی (اختیاری):</label>
+                <textarea name="excerpt_en" id="excerpt_en" 
+                          placeholder="English excerpt">{{content.excerpt.en}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>زبان‌ها:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="locales" value="fa" id="locale_fa" 
+                               {{#if (includes content.locales 'fa')}}checked{{/if}}>
+                        <label for="locale_fa">فارسی</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="locales" value="en" id="locale_en"
+                               {{#if (includes content.locales 'en')}}checked{{/if}}>
+                        <label for="locale_en">انگلیسی</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="meta_title_fa">عنوان متا (فارسی):</label>
+                        <input type="text" name="meta_title_fa" id="meta_title_fa" 
+                               value="{{content.seo.metaTitle.fa}}"
+                               placeholder="عنوان برای SEO">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="meta_title_en">عنوان متا (انگلیسی):</label>
+                        <input type="text" name="meta_title_en" id="meta_title_en" 
+                               value="{{content.seo.metaTitle.en}}"
+                               placeholder="Meta title for SEO">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="meta_description_fa">توضیحات متا (فارسی):</label>
+                <textarea name="meta_description_fa" id="meta_description_fa" 
+                          placeholder="توضیحات برای SEO">{{content.seo.metaDescription.fa}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="meta_description_en">توضیحات متا (انگلیسی):</label>
+                <textarea name="meta_description_en" id="meta_description_en" 
+                          placeholder="Meta description for SEO">{{content.seo.metaDescription.en}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="blocks">بلوک‌ها (JSON):</label>
+                <textarea name="blocks" id="blocks" rows="12" 
+                          placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان اصلی"}, "level": 1}}, {"type": "paragraph", "data": {"text": {"fa": "متن پاراگراف..."}}}]'>{{json content.blocks}}</textarea>
+                <div class="help-text">
+                    ساختار JSON بلوک‌ها. برای تست می‌توانید از: 
+                    <code>[{"type": "heading", "data": {"text": {"fa": "عنوان تست"}, "level": 2}}]</code>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 ذخیره تغییرات</button>
+                <a href="/admin/contents/{{content.id}}/preview" class="btn btn-success">👁️ پیش‌نمایش</a>
+                <a href="/admin/contents/{{content.id}}/json" class="btn btn-secondary">🔍 JSON</a>
+                <a href="/admin/contents" class="btn btn-secondary">↩️ بازگشت به لیست</a>
+            </div>
+        </form>
+        {{/if}}
+    </div>
+
+    <script>
+        // کمک به فرمت JSON
+        document.getElementById('blocks').addEventListener('blur', function() {
+            try {
+                const parsed = JSON.parse(this.value);
+                this.value = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+                // اگر JSON معتبر نیست، کاری نکن
+            }
+        });
+    </script>
 </body>
 </html>
