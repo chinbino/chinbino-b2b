@@ -4,6 +4,7 @@
   "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
     "build": "npx nest build",
+    "prestart": "npm run build",
     "start": "node dist/src/main",
     "start:dev": "npx nest start --watch",
     "start:debug": "npx nest start --debug --watch",
