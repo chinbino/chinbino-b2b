@@ -7,6 +7,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms/cms.module';
 import { AdminModule } from './admin/admin.module';
+import { PublicPagesController } from './cms/controllers/public-pages.controller'; // اضافه شود
+import { ContentService } from './cms/services/content.service';
+import { BlockRendererService } from './cms/services/block-renderer.service';
 
 @Module({
   imports: [
@@ -23,7 +26,7 @@ import { AdminModule } from './admin/admin.module';
     CmsModule,
     AdminModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, PublicPagesController], // اضافه شود
+  providers: [AppService, ContentService, BlockRendererService], // اضافه شود
 })
 export class AppModule {}
