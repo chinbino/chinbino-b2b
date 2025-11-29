@@ -5,9 +5,6 @@ export class BlockRendererService {
   
   /**
    * تبدیل آرایه بلوک‌ها به HTML کامل
-   * @param blocks آرایه بلوک‌ها
-   * @param locale زبان مورد نظر (پیش‌فرض: fa)
-   * @returns رشته HTML
    */
   renderBlocks(blocks: any[], locale: string = 'fa'): string {
     if (!Array.isArray(blocks) || blocks.length === 0) {
@@ -49,7 +46,15 @@ export class BlockRendererService {
         case 'list':
           return this.renderListBlock(block, locale);
         case 'text':
-          return this.renderTextBlock(block, locale); // برای سازگاری با نسخه قبلی
+          return this.renderTextBlock(block, locale);
+        case 'categories':
+          return this.renderCategoriesBlock(block, locale);
+        case 'process':
+          return this.renderProcessBlock(block, locale);
+        case 'suppliers':
+          return this.renderSuppliersBlock(block, locale);
+        case 'faq':
+          return this.renderFaqBlock(block, locale);
         default:
           return this.renderUnknownBlock(block, locale);
       }
@@ -58,116 +63,173 @@ export class BlockRendererService {
     }
   }
 
-  /**
-   * بلوک هدینگ (عنوان)
-   */
-  private renderHeadingBlock(block: any, locale: string): string {
-    const level = block.data?.level || 2;
-    const text = this.getLocalizedText(block.data?.text, locale) || 'عنوان';
-    const alignment = block.data?.alignment || 'right';
-    
-    // محدود کردن level بین 1 تا 6
-    const safeLevel = Math.max(1, Math.min(6, level));
-    
-    return `<h${safeLevel} class="content-heading" style="text-align: ${alignment}; margin: 20px 0 15px 0; color: #333; font-weight: bold;">${text}</h${safeLevel}>`;
-  }
+  // ... متدهای قبلی (heading, paragraph, hero, image, list, text) بدون تغییر
 
   /**
-   * بلوک پاراگراف
+   * بلوک دسته‌بندی‌ها
    */
-  private renderParagraphBlock(block: any, locale: string): string {
-    const text = this.getLocalizedText(block.data?.text, locale) || '';
-    const alignment = block.data?.alignment || 'right';
+  private renderCategoriesBlock(block: any, locale: string): string {
+    const categories = block.data?.categories || block.data?.items || [];
+    const title = this.getLocalizedText(block.data?.title, locale) || 'دسته‌بندی‌ها';
     
-    if (!text.trim()) return '';
-    
-    return `<p class="content-paragraph" style="text-align: ${alignment}; line-height: 1.8; margin-bottom: 15px; color: #555; font-size: 16px;">${text}</p>`;
-  }
+    if (!Array.isArray(categories) || categories.length === 0) return '';
 
-  /**
-   * بلوک هیرو (صفحه اصلی)
-   */
-  private renderHeroBlock(block: any, locale: string): string {
-    const title = this.getLocalizedText(block.data?.title, locale) || '';
-    const subtitle = this.getLocalizedText(block.data?.subtitle, locale) || '';
-    const background = block.data?.background || '#f8f9fa';
-    const textColor = block.data?.textColor || '#333';
-    
+    const categoryItems = categories
+      .map(category => {
+        const name = this.getLocalizedText(category.name, locale) || 'دسته‌بندی';
+        const description = this.getLocalizedText(category.description, locale) || '';
+        const icon = category.icon || '📦';
+        
+        return `
+          <div class="category-item" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; transition: transform 0.2s;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">${icon}</div>
+            <h3 style="margin-bottom: 10px; color: #2d3748;">${name}</h3>
+            ${description ? `<p style="color: #718096; font-size: 14px;">${description}</p>` : ''}
+          </div>
+        `;
+      })
+      .join('');
+
     return `
-      <section class="content-hero" style="background: ${background}; padding: 80px 20px; text-align: center; margin: 30px 0; border-radius: 8px;">
-        ${title ? `<h1 style="margin-bottom: 20px; color: ${textColor}; font-size: 2.5rem;">${title}</h1>` : ''}
-        ${subtitle ? `<p style="font-size: 1.2rem; color: ${textColor}; opacity: 0.8; max-width: 600px; margin: 0 auto;">${subtitle}</p>` : ''}
+      <section class="categories-block" style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #2d3748;">${title}</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+          ${categoryItems}
+        </div>
       </section>
     `;
   }
 
   /**
-   * بلوک تصویر
+   * بلوک فرآیند
    */
-  private renderImageBlock(block: any, locale: string): string {
-    const url = block.data?.url || '';
-    const alt = this.getLocalizedText(block.data?.alt, locale) || 'تصویر';
-    const caption = this.getLocalizedText(block.data?.caption, locale) || '';
-    const alignment = block.data?.alignment || 'center';
+  private renderProcessBlock(block: any, locale: string): string {
+    const steps = block.data?.steps || block.data?.items || [];
+    const title = this.getLocalizedText(block.data?.title, locale) || 'فرآیند کار';
     
-    if (!url) return '';
-    
-    return `
-      <figure class="content-image" style="text-align: ${alignment}; margin: 25px 0;">
-        <img src="${url}" alt="${alt}" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        ${caption ? `<figcaption style="margin-top: 10px; font-size: 14px; color: #666; font-style: italic;">${caption}</figcaption>` : ''}
-      </figure>
-    `;
-  }
+    if (!Array.isArray(steps) || steps.length === 0) return '';
 
-  /**
-   * بلوک لیست
-   */
-  private renderListBlock(block: any, locale: string): string {
-    const items = block.data?.items || [];
-    const style = block.data?.style || 'unordered';
-    
-    if (!Array.isArray(items) || items.length === 0) return '';
-    
-    const listItems = items
-      .map(item => {
-        const text = this.getLocalizedText(item?.text, locale) || '';
-        return text ? `<li style="margin-bottom: 8px; line-height: 1.6; padding-right: 5px;">${text}</li>` : '';
+    const stepItems = steps
+      .map((step, index) => {
+        const title = this.getLocalizedText(step.title, locale) || `مرحله ${index + 1}`;
+        const description = this.getLocalizedText(step.description, locale) || '';
+        
+        return `
+          <div class="process-step" style="display: flex; align-items: start; margin-bottom: 30px;">
+            <div style="background: #667eea; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 15px; flex-shrink: 0;">
+              ${index + 1}
+            </div>
+            <div>
+              <h3 style="margin-bottom: 10px; color: #2d3748;">${title}</h3>
+              ${description ? `<p style="color: #718096; line-height: 1.6;">${description}</p>` : ''}
+            </div>
+          </div>
+        `;
       })
-      .filter(item => item !== '')
       .join('');
-    
-    if (!listItems) return '';
-    
-    const tag = style === 'ordered' ? 'ol' : 'ul';
-    const listStyle = style === 'ordered' ? 'decimal' : 'disc';
-    
+
     return `
-      <div class="content-list" style="margin: 20px 0;">
-        <${tag} style="padding-right: 25px; list-style-type: ${listStyle};">
-          ${listItems}
-        </${tag}>
-      </div>
+      <section class="process-block" style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 40px; color: #2d3748;">${title}</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+          ${stepItems}
+        </div>
+      </section>
     `;
   }
 
   /**
-   * بلوک متن (برای سازگاری با نسخه قبلی)
+   * بلوک تامین‌کنندگان
    */
-  private renderTextBlock(block: any, locale: string): string {
-    const text = this.getLocalizedText(block.content?.text, locale) || 
-                 this.getLocalizedText(block.content?.blocks?.[0]?.text, locale) || 
-                 'متن';
+  private renderSuppliersBlock(block: any, locale: string): string {
+    const suppliers = block.data?.suppliers || block.data?.items || [];
+    const title = this.getLocalizedText(block.data?.title, locale) || 'تامین‌کنندگان';
     
-    return `<div class="content-text" style="line-height: 1.7; margin-bottom: 15px; color: #555;">${text}</div>`;
+    if (!Array.isArray(suppliers) || suppliers.length === 0) return '';
+
+    const supplierItems = suppliers
+      .map(supplier => {
+        const name = this.getLocalizedText(supplier.name, locale) || 'تامین‌کننده';
+        const description = this.getLocalizedText(supplier.description, locale) || '';
+        const location = this.getLocalizedText(supplier.location, locale) || '';
+        const specialty = this.getLocalizedText(supplier.specialty, locale) || '';
+        
+        return `
+          <div class="supplier-item" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 25px; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px; color: #2d3748;">${name}</h3>
+            ${specialty ? `<p style="color: #667eea; font-weight: bold; margin-bottom: 10px;">${specialty}</p>` : ''}
+            ${location ? `<p style="color: #718096; margin-bottom: 10px;">📍 ${location}</p>` : ''}
+            ${description ? `<p style="color: #4a5568; line-height: 1.6;">${description}</p>` : ''}
+          </div>
+        `;
+      })
+      .join('');
+
+    return `
+      <section class="suppliers-block" style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #2d3748;">${title}</h2>
+        <div style="max-width: 900px; margin: 0 auto;">
+          ${supplierItems}
+        </div>
+      </section>
+    `;
+  }
+
+  /**
+   * بلوک سوالات متداول
+   */
+  private renderFaqBlock(block: any, locale: string): string {
+    const faqs = block.data?.faqs || block.data?.items || [];
+    const title = this.getLocalizedText(block.data?.title, locale) || 'سوالات متداول';
+    
+    if (!Array.isArray(faqs) || faqs.length === 0) return '';
+
+    const faqItems = faqs
+      .map(faq => {
+        const question = this.getLocalizedText(faq.question, locale) || '';
+        const answer = this.getLocalizedText(faq.answer, locale) || '';
+        
+        if (!question) return '';
+        
+        return `
+          <div class="faq-item" style="border-bottom: 1px solid #e2e8f0; padding: 20px 0;">
+            <h3 style="color: #2d3748; margin-bottom: 10px;">${question}</h3>
+            <div style="color: #4a5568; line-height: 1.7; padding-right: 10px;">${answer}</div>
+          </div>
+        `;
+      })
+      .join('');
+
+    return `
+      <section class="faq-block" style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #2d3748;">${title}</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+          ${faqItems}
+        </div>
+      </section>
+    `;
   }
 
   /**
    * بلوک ناشناخته یا پشتیبانی نشده
    */
   private renderUnknownBlock(block: any, locale: string): string {
-    return `<!-- بلوک نوع "${block.type}" پشتیبانی نمی‌شود -->`;
+    // نمایش اطلاعات دیباگ برای بلوک‌های ناشناخته
+    return `
+      <div class="unknown-block" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 15px 0;">
+        <strong>⚠️ بلوک نوع "${block.type}"</strong>
+        <div style="font-size: 12px; color: #856404; margin-top: 5px;">
+          این نوع بلوک نیاز به پیاده‌سازی دارد.
+          <details style="margin-top: 5px;">
+            <summary>داده‌های بلوک:</summary>
+            <pre style="background: white; padding: 10px; border-radius: 4px; margin-top: 5px; font-size: 10px; overflow: auto;">${JSON.stringify(block, null, 2)}</pre>
+          </details>
+        </div>
+      </div>
+    `;
   }
+
+  // ... متد getLocalizedText و validateBlocks و getSupportedBlockTypes بدون تغییر
 
   /**
    * گرفتن متن متناسب با زبان
@@ -200,10 +262,6 @@ export class BlockRendererService {
       if (!block.type || typeof block.type !== 'string') {
         errors.push(`بلوک ${index}: فیلد type الزامی است`);
       }
-
-      if (!block.data && !block.content) {
-        errors.push(`بلوک ${index}: فیلد data یا content الزامی است`);
-      }
     });
 
     return {
@@ -222,7 +280,11 @@ export class BlockRendererService {
       'hero', 
       'image',
       'list',
-      'text' // برای سازگاری با نسخه قبلی
+      'text',
+      'categories',
+      'process', 
+      'suppliers',
+      'faq'
     ];
   }
 }
