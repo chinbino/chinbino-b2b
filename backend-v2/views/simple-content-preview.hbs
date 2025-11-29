@@ -1,27 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl" lang="fa">
 <head>
-    <title>پیش‌نمایش محتوا - ساده</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیش‌نمایش: {{content.title.fa}}</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .header { background: #f0f0f0; padding: 15px; margin-bottom: 20px; }
-        .preview-area { border: 2px dashed #ccc; padding: 20px; min-height: 400px; }
+        body {
+            font-family: Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            direction: rtl;
+        }
+        .admin-header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .admin-header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .admin-toolbar {
+            background: #e9ecef;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ced4da;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .content-info {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #495057;
+        }
+        .content-info span {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        .locale-switcher {
+            display: flex;
+            gap: 5px;
+            margin-right: auto;
+        }
+        .locale-btn {
+            padding: 6px 12px;
+            border: 1px solid #007bff;
+            background: white;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .locale-btn.active {
+            background: #007bff;
+            color: white;
+        }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .preview-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .preview-content {
+            padding: 40px;
+            min-height: 500px;
+        }
+        .preview-content h1, .preview-content h2, .preview-content h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .preview-content p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .preview-content .block {
+            margin-bottom: 30px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .error-state {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px;
+            text-align: center;
+        }
+        .json-debug {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .debug-toggle {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>پیش‌نمایش محتوا (نسخه ساده)</h1>
-        <p>عنوان: {{content.title.fa}} | زبان: {{locale}}</p>
-        <a href="/admin/contents/{{content.id}}/edit">✏️ ویرایش</a> | 
-        <a href="/admin/contents">↩️ بازگشت</a>
+    {{#if success}}
+    <div class="admin-header">
+        <h1>پیش‌نمایش محتوا: {{content.title.fa}}</h1>
     </div>
 
-    {{#if success}}
-        <div class="preview-area">
-            {{{bodyHtml}}}
+    <div class="admin-toolbar">
+        <div class="content-info">
+            <span><strong>ID:</strong> {{content.id}}</span>
+            <span><strong>Type:</strong> {{content.type}}</span>
+            <span><strong>Status:</strong> {{content.status}}</span>
+            <span><strong>Slug:</strong> {{content.slug}}</span>
         </div>
+
+        <div class="locale-switcher">
+            <a href="?locale=fa" class="locale-btn {{#eq locale 'fa'}}active{{/eq}}">فارسی</a>
+            <a href="?locale=en" class="locale-btn {{#eq locale 'en'}}active{{/eq}}">English</a>
+        </div>
+
+        <a href="/admin/contents/{{content.id}}/edit" class="btn btn-primary">✏️ ویرایش</a>
+        <a href="/admin/contents/{{content.id}}/json" class="btn btn-secondary">🔍 JSON</a>
+        <a href="/admin/contents" class="btn btn-success">↩️ لیست محتواها</a>
+
+        <button class="debug-toggle" onclick="toggleDebug()">نمایش/مخفی کردن دیباگ</button>
+    </div>
+
+    <div class="preview-container">
+        <div class="preview-content">
+            {{#if bodyHtml}}
+                {{{bodyHtml}}}
+            {{else}}
+                <div class="empty-state">
+                    <h3>⚠️ هیچ محتوایی برای نمایش وجود ندارد</h3>
+                    <p>این محتوا هنوز بلوکی ندارد. برای افزودن محتوا روی دکمه "ویرایش" کلیک کنید.</p>
+                    <p>محتواهای نمونه از قبل در سیستم موجود هستند که دارای بلوک می‌باشند.</p>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="json-debug" id="jsonDebug">
+        <strong>دیباگ اطلاعات:</strong>
+        بلوک‌های خام (Raw Blocks):
+        {{json content.blocks}}
+        
+        HTML رندر شده:
+        {{bodyHtml}}
+    </div>
+
     {{else}}
-        <p style="color: red;">❌ خطا: {{error}}</p>
+    <div class="error-state">
+        <h2>❌ خطا در بارگذاری پیش‌نمایش</h2>
+        <p>{{error}}</p>
+        <a href="/admin/contents" class="btn btn-secondary">بازگشت به لیست</a>
+    </div>
     {{/if}}
+
+    <script>
+        function toggleDebug() {
+            const debug = document.getElementById('jsonDebug');
+            debug.style.display = debug.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // اضافه کردن استایل‌های پایه برای بلوک‌ها
+        document.addEventListener('DOMContentLoaded', function() {
+            // استایل برای headings
+            const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headings.forEach(heading => {
+                heading.style.marginBottom = '15px';
+                heading.style.color = '#333';
+            });
+            
+            // استایل برای پاراگراف‌ها
+            const paragraphs = document.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                p.style.lineHeight = '1.7';
+                p.style.marginBottom = '15px';
+                p.style.color = '#555';
+            });
+        });
+    </script>
 </body>
 </html>
