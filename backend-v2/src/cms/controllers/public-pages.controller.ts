@@ -3,16 +3,13 @@ import { Response } from 'express';
 import { ContentService } from '../services/content.service';
 import { BlockRendererService } from '../services/block-renderer.service';
 
-@Controller() // بدون prefix - routeهای روت
+@Controller()
 export class PublicPagesController {
   constructor(
     private readonly contentService: ContentService,
     private readonly blockRenderer: BlockRendererService,
   ) {}
 
-  /**
-   * صفحه public برای Yiwu Market
-   */
   @Get('yiwu-market')
   @Header('Content-Type', 'text/html; charset=utf-8')
   async yiwuMarket(
@@ -20,50 +17,51 @@ export class PublicPagesController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      // پیدا کردن محتوای Yiwu Market بر اساس slug
       const content = await this.contentService.findBySlug('yiwu-market');
       
       if (!content) {
-        // اگر محتوا پیدا نشد، صفحه 404 نمایش داده شود
-        const notFoundHtml = this.generateNotFoundPage('yiwu-market', locale);
-        res.status(404).send(notFoundHtml);
+        res.status(404).send(this.generateNotFound(locale));
         return;
       }
 
-      // رندر بلوک‌ها به HTML
       const bodyHtml = this.blockRenderer.renderBlocks(content.blocks, locale);
-      
-      // آماده‌سازی اطلاعات SEO
       const seo = content.seo || {};
-      const metaTitle = this.getLocalizedValue(seo.metaTitle, locale) || 
-                       this.getLocalizedValue(content.title, locale) || 
-                       'بازار فوتین - Yiwu Market';
       
-      const metaDescription = this.getLocalizedValue(seo.metaDescription, locale) || 
-                             this.getLocalizedValue(content.excerpt, locale) || 
-                             'تامین مستقیم از بازار ییوو چین - Chinbino B2B Platform';
+      const html = `
+<!DOCTYPE html>
+<html lang="${locale}" dir="${locale === 'fa' ? 'rtl' : 'ltr'}">
+<head>
+    <meta charset="UTF-8">
+    <title>${this.escapeHtml(content.title?.fa || 'Yiwu Market')}</title>
+</head>
+<body>
+    <h1>${this.escapeHtml(content.title?.fa || 'Yiwu Market')}</h1>
+    ${bodyHtml}
+</body>
+</html>`;
       
-      const robots = seo.robots || 'index,follow';
-
-      // تولید HTML کامل
-      const html = this.generateFullPage({
-        metaTitle,
-        metaDescription,
-        robots,
-        bodyHtml,
-        locale,
-        content
-      });
-
       res.send(html);
 
     } catch (error) {
-      console.error('Error rendering Yiwu Market page:', error);
-      const errorHtml = this.generateErrorPage(error.message, locale);
-      res.status(500).send(errorHtml);
+      res.status(500).send(this.generateError(error.message, locale));
     }
   }
 
-  // ... بقیه متدها بدون تغییر (generateFullPage, generateNotFoundPage, etc.)
-  // همه متدهای helper را حفظ کنید
+  private generateNotFound(locale: string): string {
+    return `<!DOCTYPE html><html><body><h1>404 - Page Not Found</h1></body></html>`;
+  }
+
+  private generateError(error: string, locale: string): string {
+    return `<!DOCTYPE html><html><body><h1>500 - Error</h1><p>${this.escapeHtml(error)}</p></body></html>`;
+  }
+
+  private escapeHtml(unsafe: string): string {
+    if (!unsafe) return '';
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 }
