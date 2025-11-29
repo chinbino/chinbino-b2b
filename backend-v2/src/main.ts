@@ -25,8 +25,10 @@ async function bootstrap() {
   hbs.registerHelper('json', function (obj) {
     return JSON.stringify(obj, null, 2);
   });
-  
-  await app.listen(process.env.PORT || 10000);
+
+  // ✅ استفاده از PORT environment variable
+  const port = process.env.PORT || 10000;
+  await app.listen(port);
   console.log(`🚀 Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
