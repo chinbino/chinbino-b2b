@@ -14,7 +14,7 @@ import { SellersModule } from './sellers/sellers.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.NODE_ENV !== 'production', // در production باید false باشد
       autoLoadEntities: true,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
@@ -23,7 +23,7 @@ import { SellersModule } from './sellers/sellers.module';
     AuthModule,
     CmsModule,
     AdminModule,
-    SellersModule, // اضافه شد
+    SellersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
