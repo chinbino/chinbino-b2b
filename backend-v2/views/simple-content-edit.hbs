@@ -225,12 +225,16 @@
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" name="locales" value="fa" id="locale_fa" 
-                               {{#if (includes content.locales 'fa')}}checked{{/if}}>
+                               {{#each content.locales}}
+                                   {{#eq this 'fa'}}checked{{/eq}}
+                               {{/each}}>
                         <label for="locale_fa">فارسی</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" name="locales" value="en" id="locale_en"
-                               {{#if (includes content.locales 'en')}}checked{{/if}}>
+                               {{#each content.locales}}
+                                   {{#eq this 'en'}}checked{{/eq}}
+                               {{/each}}>
                         <label for="locale_en">انگلیسی</label>
                     </div>
                 </div>
@@ -270,7 +274,7 @@
             <div class="form-group">
                 <label for="blocks">بلوک‌ها (JSON):</label>
                 <textarea name="blocks" id="blocks" rows="12" 
-                          placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان اصلی"}, "level": 1}}, {"type": "paragraph", "data": {"text": {"fa": "متن پاراگراف..."}}}]'>{{json content.blocks}}</textarea>
+                          placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان اصلی"}, "level": 1}}, {"type": "paragraph", "data": {"text": {"fa": "متن پاراگراف..."}}}]'>{{toJSON content.blocks}}</textarea>
                 <div class="help-text">
                     ساختار JSON بلوک‌ها. برای تست می‌توانید از: 
                     <code>[{"type": "heading", "data": {"text": {"fa": "عنوان تست"}, "level": 2}}]</code>
