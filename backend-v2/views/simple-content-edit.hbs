@@ -225,19 +225,16 @@
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" name="locales" value="fa" id="locale_fa" 
-                               {{#each content.locales}}
-                                   {{#eq this 'fa'}}checked{{/eq}}
-                               {{/each}}>
+                               class="locale-checkbox" data-value="fa">
                         <label for="locale_fa">فارسی</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" name="locales" value="en" id="locale_en"
-                               {{#each content.locales}}
-                                   {{#eq this 'en'}}checked{{/eq}}
-                               {{/each}}>
+                               class="locale-checkbox" data-value="en">
                         <label for="locale_en">انگلیسی</label>
                     </div>
                 </div>
+                <input type="hidden" id="locales_data" value="{{#if content.locales}}{{#each content.locales}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}}">
             </div>
 
             <div class="form-row">
@@ -274,7 +271,7 @@
             <div class="form-group">
                 <label for="blocks">بلوک‌ها (JSON):</label>
                 <textarea name="blocks" id="blocks" rows="12" 
-                          placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان اصلی"}, "level": 1}}, {"type": "paragraph", "data": {"text": {"fa": "متن پاراگراف..."}}}]'>{{toJSON content.blocks}}</textarea>
+                          placeholder='[{"type": "heading", "data": {"text": {"fa": "عنوان اصلی"}, "level": 1}}, {"type": "paragraph", "data": {"text": {"fa": "متن پاراگراف..."}}}]'></textarea>
                 <div class="help-text">
                     ساختار JSON بلوک‌ها. برای تست می‌توانید از: 
                     <code>[{"type": "heading", "data": {"text": {"fa": "عنوان تست"}, "level": 2}}]</code>
@@ -292,14 +289,41 @@
     </div>
 
     <script>
-        // کمک به فرمت JSON
-        document.getElementById('blocks').addEventListener('blur', function() {
-            try {
-                const parsed = JSON.parse(this.value);
-                this.value = JSON.stringify(parsed, null, 2);
-            } catch (e) {
-                // اگر JSON معتبر نیست، کاری نکن
+        // تنظیم وضعیت checkboxهای زبان‌ها
+        document.addEventListener('DOMContentLoaded', function() {
+            // تنظیم زبان‌ها
+            const localesData = document.getElementById('locales_data').value;
+            if (localesData) {
+                const locales = localesData.split(',');
+                document.querySelectorAll('.locale-checkbox').forEach(function(checkbox) {
+                    if (locales.includes(checkbox.dataset.value)) {
+                        checkbox.checked = true;
+                    }
+                });
             }
+            
+            // تنظیم محتوای JSON بلوک‌ها
+            const blocksTextarea = document.getElementById('blocks');
+            if (blocksTextarea) {
+                try {
+                    const blocksData = {{#if content.blocks}}{{json content.blocks}}{{else}}null{{/if}};
+                    if (blocksData) {
+                        blocksTextarea.value = JSON.stringify(blocksData, null, 2);
+                    }
+                } catch (e) {
+                    console.log('خطا در تنظیم بلوک‌ها:', e);
+                }
+            }
+            
+            // کمک به فرمت JSON
+            document.getElementById('blocks').addEventListener('blur', function() {
+                try {
+                    const parsed = JSON.parse(this.value);
+                    this.value = JSON.stringify(parsed, null, 2);
+                } catch (e) {
+                    // اگر JSON معتبر نیست، کاری نکن
+                }
+            });
         });
     </script>
 </body>
