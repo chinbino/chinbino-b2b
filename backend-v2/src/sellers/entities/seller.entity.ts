@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+// import { User } from '../../users/entities/user.entity'; // موقتاً کامنت کنید
 import { Product } from '../../products/entities/product.entity';
 
 @Entity({ name: 'sellers' })
@@ -50,8 +50,9 @@ export class Seller {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => User, (user) => user.seller)
-  users: User[];
+  // موقتاً کامنت کنید تا بعداً اضافه کنیم
+  // @OneToMany(() => User, (user) => user.seller)
+  // users: User[];
 
   @OneToMany(() => Product, (product) => product.seller)
   products: Product[];
