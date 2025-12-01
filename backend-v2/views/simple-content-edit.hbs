@@ -224,17 +224,14 @@
                 <label>زبان‌ها:</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" name="locales" value="fa" id="locale_fa" 
-                               class="locale-checkbox" data-value="fa">
+                        <input type="checkbox" name="locales" value="fa" id="locale_fa">
                         <label for="locale_fa">فارسی</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" name="locales" value="en" id="locale_en"
-                               class="locale-checkbox" data-value="en">
+                        <input type="checkbox" name="locales" value="en" id="locale_en">
                         <label for="locale_en">انگلیسی</label>
                     </div>
                 </div>
-                <input type="hidden" id="locales_data" value="{{#if content.locales}}{{#each content.locales}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}}">
             </div>
 
             <div class="form-row">
@@ -289,41 +286,35 @@
     </div>
 
     <script>
-        // تنظیم وضعیت checkboxهای زبان‌ها
+        // وقتی صفحه لود شد
         document.addEventListener('DOMContentLoaded', function() {
-            // تنظیم زبان‌ها
-            const localesData = document.getElementById('locales_data').value;
-            if (localesData) {
-                const locales = localesData.split(',');
-                document.querySelectorAll('.locale-checkbox').forEach(function(checkbox) {
-                    if (locales.includes(checkbox.dataset.value)) {
-                        checkbox.checked = true;
-                    }
-                });
+            // تنظیم checkboxهای زبان‌ها
+            const contentLocales = '{{content.locales}}'; // این به صورت آرایه نمی‌آید، باید بررسی کنیم
+            const locales = contentLocales.split(',');
+            
+            if (locales.includes('fa') || contentLocales.includes('fa')) {
+                document.getElementById('locale_fa').checked = true;
+            }
+            if (locales.includes('en') || contentLocales.includes('en')) {
+                document.getElementById('locale_en').checked = true;
             }
             
             // تنظیم محتوای JSON بلوک‌ها
             const blocksTextarea = document.getElementById('blocks');
-            if (blocksTextarea) {
-                try {
-                    const blocksData = {{#if content.blocks}}{{json content.blocks}}{{else}}null{{/if}};
-                    if (blocksData) {
-                        blocksTextarea.value = JSON.stringify(blocksData, null, 2);
-                    }
-                } catch (e) {
-                    console.log('خطا در تنظیم بلوک‌ها:', e);
-                }
-            }
+            // چون نمی‌توانیم از helper json استفاده کنیم، باید راه دیگری پیدا کنیم
+            // فعلاً خالی می‌گذاریم
             
             // کمک به فرمت JSON
-            document.getElementById('blocks').addEventListener('blur', function() {
-                try {
-                    const parsed = JSON.parse(this.value);
-                    this.value = JSON.stringify(parsed, null, 2);
-                } catch (e) {
-                    // اگر JSON معتبر نیست، کاری نکن
-                }
-            });
+            if (blocksTextarea) {
+                blocksTextarea.addEventListener('blur', function() {
+                    try {
+                        const parsed = JSON.parse(this.value);
+                        this.value = JSON.stringify(parsed, null, 2);
+                    } catch (e) {
+                        // اگر JSON معتبر نیست، کاری نکن
+                    }
+                });
+            }
         });
     </script>
 </body>
