@@ -8,8 +8,8 @@ import {
   ManyToOne,
   JoinColumn 
 } from 'typeorm';
-import { Product } from '../../products/entities/product.entity';
-import { Seller } from '../../sellers/entities/seller.entity'; // اضافه شد
+// import { Product } from '../../products/entities/product.entity'; // ❌ کامنت کن
+import { Seller } from '../../sellers/entities/seller.entity';
 // import { Order } from '../../orders/entities/order.entity'; // ❌ کامنت کن
 
 @Entity('users')
@@ -69,7 +69,6 @@ export class User {
   })
   preferredCurrency: string;
 
-  // 🔥 رابطه با Seller اضافه شد
   @ManyToOne(() => Seller, (seller) => seller.users, {
     nullable: true,
     onDelete: 'SET NULL'
@@ -89,8 +88,9 @@ export class User {
   @Column({ nullable: true })
   lastLoginAt: Date;
 
-  @OneToMany(() => Product, product => product.seller)
-  products: Product[];
+  // ❌ کامنت کن چون محصولات دیگر به User مرتبط نیستند
+  // @OneToMany(() => Product, product => product.seller)
+  // products: Product[];
 
   // @OneToMany(() => Order, order => order.buyer) // ❌ کامنت کن
   // orders: Order[];
