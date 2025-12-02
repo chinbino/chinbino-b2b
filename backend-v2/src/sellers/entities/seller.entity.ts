@@ -30,7 +30,6 @@ export class Seller {
   @Column({ name: 'company_name', type: 'varchar', length: 255, nullable: true })
   companyName?: string;
 
-  // 🔴 فیلدهای جدید اضافه شد
   @Column({ 
     name: 'status',
     type: 'enum',
@@ -48,7 +47,10 @@ export class Seller {
   @Column({ name: 'wechat_id', type: 'varchar', length: 255, nullable: true })
   wechatId?: string;
 
-  // 🔴 فیلدهای موجود
+  // 🔴 فیلد جدید اختیاری
+  @Column({ name: 'contact_email', type: 'varchar', length: 255, nullable: true })
+  contactEmail?: string;
+
   @Column({ name: 'contact_person', type: 'varchar', length: 255, nullable: true })
   contactPerson?: string;
 
@@ -73,7 +75,6 @@ export class Seller {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // 🔴 Soft Delete اضافه شد
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
