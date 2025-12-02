@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminController } from './controllers/admin.controller';
-import { AdminSellersController } from './controllers/admin-sellers.controller'; // اضافه شد
-import { AdminContentsController } from './controllers/admin-contents.controller';
-import { SellersModule } from '../sellers/sellers.module'; // اضافه شد
+import { AdminSellersController } from './controllers/admin-sellers.controller';
+import { SellersModule } from '../sellers/sellers.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([]),
-    SellersModule, // اضافه شد - برای دسترسی به SellersService
+    SellersModule,
   ],
   controllers: [
-    AdminController,
-    AdminSellersController, // اضافه شد
-    AdminContentsController,
+    AdminSellersController,
   ],
   providers: [],
 })
