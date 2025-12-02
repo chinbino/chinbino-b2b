@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -6,6 +7,18 @@ import * as hbs from 'hbs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  
+  // 🔴 فعال کردن Validation Pipe (اضافه شد)
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, // حذف خودکار فیلدهای اضافی
+    forbidNonWhitelisted: false, // برای شروع false باشد
+    transform: true, // تبدیل انواع داده (مثلاً string به number)
+    disableErrorMessages: false, // نمایش پیام‌های خطا
+    validationError: {
+      target: false, // عدم نمایش object کامل در خطا
+      value: false, // عدم نمایش مقادیر در خطا
+    }
+  }));
   
   // ✅ تنظیم Handlebars
   app.setViewEngine('hbs');
