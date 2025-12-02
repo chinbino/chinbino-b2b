@@ -1,3 +1,4 @@
+// ابتدا enum را export کنید
 export enum ProductStatus {
   DRAFT = 'draft',
   ACTIVE = 'active',
@@ -14,7 +15,7 @@ import {
   JoinColumn 
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Seller } from '../../sellers/entities/seller.entity'; // اضافه شد
+import { Seller } from '../../sellers/entities/seller.entity';
 
 @Entity()
 export class Product {
@@ -51,7 +52,6 @@ export class Product {
   @Column({ default: 0 })
   stockUnit: number;
 
-  // فیلدهای جدید کارتن
   @Column({ type: 'int', nullable: true })
   unitsPerCarton: number;
 
@@ -74,7 +74,6 @@ export class Product {
   })
   status: ProductStatus;
 
-  // 🔥 تغییر از User به Seller
   @ManyToOne(() => Seller, (seller) => seller.products, {
     nullable: true,
     onDelete: 'SET NULL'
