@@ -1,21 +1,34 @@
 #!/bin/bash
-echo "🚀 شروع راه‌اندازی در Render.com..."
+echo "🚀 ========== شروع render-start.sh =========="
+echo "📁 مسیر جاری: $(pwd)"
+echo "📁 لیست فایل‌ها:"
+ls -la
 
-# بررسی وجود dist/main
-if [ -f "dist/main.js" ]; then
-    echo "✅ dist/main.js پیدا شد"
-    node dist/main
-else
-    echo "⚠️ dist/main.js یافت نشد، تلاش برای build..."
-    
-    # تلاش برای build
-    npm run build 2>/dev/null || echo "Build failed"
+echo "🔍 بررسی dist..."
+if [ -d "dist" ]; then
+    echo "📁 محتوای dist:"
+    ls -la dist/
     
     if [ -f "dist/main.js" ]; then
-        echo "✅ build موفق، اجرای سرور..."
+        echo "✅ dist/main.js پیدا شد"
+        echo "🚀 اجرای dist/main.js..."
         node dist/main
     else
-        echo "❌ build شکست خورد، اجرای nest مستقیم..."
-        nest start
+        echo "❌ dist/main.js یافت نشد"
     fi
+else
+    echo "❌ پوشه dist وجود ندارد"
 fi
+
+echo "🔍 بررسی src..."
+if [ -f "src/main.ts" ]; then
+    echo "✅ src/main.ts پیدا شد"
+    echo "🔄 تلاش برای اجرای مستقیم nest..."
+    nest start
+else
+    echo "❌ src/main.ts یافت نشد"
+    echo "📁 محتوای src:"
+    ls -la src/
+fi
+
+echo "========== پایان render-start.sh =========="
