@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Query, Param } from '@nestjs/common'; // 🔴 Param اضافه شد
+import { Controller, Get, Render, Query, Param } from '@nestjs/common';
 import { SellersService } from '../../sellers/sellers.service';
 
 @Controller('admin/sellers')
@@ -6,7 +6,7 @@ export class AdminSellersController {
   constructor(private readonly sellersService: SellersService) {}
 
   @Get()
-  @Render('admin/sellers-list')
+  @Render('sellers-list') // 🔴 تغییر شد: 'admin/sellers-list' → 'sellers-list'
   async listSellers(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '20',
@@ -17,16 +17,13 @@ export class AdminSellersController {
     const limitNum = parseInt(limit, 10) || 20;
     const skip = (pageNum - 1) * limitNum;
 
-    // دریافت Sellerها از Service
-    const sellers = await this.sellersService.findAll(true); // شامل deletedها
+    const sellers = await this.sellersService.findAll(true);
     
-    // فیلتر بر اساس status
     let filteredSellers = sellers;
     if (status) {
       filteredSellers = sellers.filter(seller => seller.status === status);
     }
     
-    // جستجو
     if (search) {
       const searchLower = search.toLowerCase();
       filteredSellers = filteredSellers.filter(seller => 
@@ -37,7 +34,6 @@ export class AdminSellersController {
       );
     }
 
-    // Pagination
     const total = filteredSellers.length;
     const paginatedSellers = filteredSellers.slice(skip, skip + limitNum);
 
@@ -58,7 +54,7 @@ export class AdminSellersController {
   }
 
   @Get('create')
-  @Render('admin/seller-create')
+  @Render('seller-create') // 🔴 تغییر شد
   createPage() {
     return {
       statusOptions: ['pending', 'approved', 'rejected'],
@@ -66,7 +62,7 @@ export class AdminSellersController {
   }
 
   @Get(':id/edit')
-  @Render('admin/seller-edit')
+  @Render('seller-edit') // 🔴 تغییر شد
   async editPage(@Param('id') id: string) {
     const seller = await this.sellersService.findOne(parseInt(id, 10), true);
     
