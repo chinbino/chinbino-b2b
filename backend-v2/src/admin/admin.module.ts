@@ -1,20 +1,22 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminSellersController } from './controllers/admin-sellers.controller';
-import { AdminContentsController } from './controllers/admin-contents.controller';
-import { SellersModule } from '../sellers/sellers.module';
-import { CmsModule } from '../cms/cms.module'; // اضافه شد
+import { join } from 'path';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([]),
-    SellersModule,
-    CmsModule, // اضافه شد - برای ContentService و BlockRendererService
-  ],
-  controllers: [
-    AdminSellersController,
-    AdminContentsController,
-  ],
-  providers: [],
+  controllers: [AdminSellersController],
 })
-export class AdminModule {}
+export class AdminModule {
+  constructor() {
+    // تنظیم view engine برای admin
+    this.configureViews();
+  }
+
+  private configureViews() {
+    // این کاس در اصل باید در main.ts باشد، اما برای تست در اینجا قرار می‌دهیم
+    const hbs = require('hbs');
+    
+    // تنظیم مسیر views برای admin
+    const adminViewsPath = join(__dirname, 'views');
+    console.log('Admin views path:', adminViewsPath);
+  }
+}
