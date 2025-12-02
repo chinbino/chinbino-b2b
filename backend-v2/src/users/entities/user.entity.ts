@@ -4,13 +4,10 @@ import {
   PrimaryGeneratedColumn, 
   CreateDateColumn, 
   UpdateDateColumn, 
-  OneToMany,
   ManyToOne,
   JoinColumn 
 } from 'typeorm';
-// import { Product } from '../../products/entities/product.entity'; // ❌ کامنت کن
 import { Seller } from '../../sellers/entities/seller.entity';
-// import { Order } from '../../orders/entities/order.entity'; // ❌ کامنت کن
 
 @Entity('users')
 export class User {
@@ -87,11 +84,4 @@ export class User {
 
   @Column({ nullable: true })
   lastLoginAt: Date;
-
-  // ❌ کامنت کن چون محصولات دیگر به User مرتبط نیستند
-  // @OneToMany(() => Product, product => product.seller)
-  // products: Product[];
-
-  // @OneToMany(() => Order, order => order.buyer) // ❌ کامنت کن
-  // orders: Order[];
 }
