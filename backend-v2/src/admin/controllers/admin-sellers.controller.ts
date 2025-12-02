@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Query } from '@nestjs/common';
+import { Controller, Get, Render, Query, Param } from '@nestjs/common'; // 🔴 Param اضافه شد
 import { SellersService } from '../../sellers/sellers.service';
 
 @Controller('admin/sellers')
