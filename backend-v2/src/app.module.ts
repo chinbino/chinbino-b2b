@@ -8,13 +8,14 @@ import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms/cms.module';
 import { AdminModule } from './admin/admin.module';
 import { SellersModule } from './sellers/sellers.module';
+import { TestModule } from './test/test.module'; // اضافه شد
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      synchronize: process.env.NODE_ENV !== 'production', // در production باید false باشد
+      synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
@@ -24,6 +25,7 @@ import { SellersModule } from './sellers/sellers.module';
     CmsModule,
     AdminModule,
     SellersModule,
+    TestModule, // اضافه شد
   ],
   controllers: [AppController],
   providers: [AppService],
