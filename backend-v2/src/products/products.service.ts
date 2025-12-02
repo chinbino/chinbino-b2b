@@ -12,10 +12,10 @@ export class ProductsService {
     private readonly productsRepository: Repository<Product>,
   ) {}
 
-  async create(createProductDto: CreateProductDto, sellerId: string) {
+  async create(createProductDto: CreateProductDto, sellerId: number) { // تغییر: string → number
     const product = this.productsRepository.create({
       ...createProductDto,
-      seller: { id: sellerId },
+      seller: { id: sellerId }, // sellerId اکنون number است
       status: ProductStatus.ACTIVE,
     });
 
@@ -67,10 +67,10 @@ export class ProductsService {
     return { message: 'Product deleted successfully' };
   }
 
-  async findSellerProducts(sellerId: string) {
+  async findSellerProducts(sellerId: number) { // تغییر: string → number
     return await this.productsRepository.find({
       where: { 
-        seller: { id: sellerId },
+        seller: { id: sellerId }, // sellerId اکنون number است
         status: ProductStatus.ACTIVE 
       },
       relations: ['seller'],
