@@ -1,4 +1,3 @@
-// ابتدا enum را export کنید
 export enum ProductStatus {
   DRAFT = 'draft',
   ACTIVE = 'active',
@@ -14,7 +13,6 @@ import {
   UpdateDateColumn,
   JoinColumn 
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
 import { Seller } from '../../sellers/entities/seller.entity';
 
 @Entity()
@@ -76,7 +74,7 @@ export class Product {
 
   @ManyToOne(() => Seller, (seller) => seller.products, {
     nullable: true,
-    onDelete: 'SET NULL'
+    onDelete: 'SET NULL' // 🔴 این خط اضافه شد
   })
   @JoinColumn({ name: 'seller_id' })
   seller: Seller;
