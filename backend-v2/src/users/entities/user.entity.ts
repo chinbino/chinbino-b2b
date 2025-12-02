@@ -1,5 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { 
+  Entity, 
+  Column, 
+  PrimaryGeneratedColumn, 
+  CreateDateColumn, 
+  UpdateDateColumn, 
+  OneToMany,
+  ManyToOne,
+  JoinColumn 
+} from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
+import { Seller } from '../../sellers/entities/seller.entity'; // اضافه شد
 // import { Order } from '../../orders/entities/order.entity'; // ❌ کامنت کن
 
 @Entity('users')
@@ -58,6 +68,17 @@ export class User {
     default: 'IRR'
   })
   preferredCurrency: string;
+
+  // 🔥 رابطه با Seller اضافه شد
+  @ManyToOne(() => Seller, (seller) => seller.users, {
+    nullable: true,
+    onDelete: 'SET NULL'
+  })
+  @JoinColumn({ name: 'seller_id' })
+  seller: Seller;
+
+  @Column({ name: 'seller_id', type: 'int', nullable: true })
+  sellerId: number;
 
   @CreateDateColumn()
   createdAt: Date;
