@@ -8,21 +8,21 @@ import * as hbs from 'hbs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
-  // 🔴 فعال کردن Validation Pipe (اضافه شد)
+  // 🔴 فعال کردن Validation Pipe
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true, // حذف خودکار فیلدهای اضافی
-    forbidNonWhitelisted: false, // برای شروع false باشد
-    transform: true, // تبدیل انواع داده (مثلاً string به number)
-    disableErrorMessages: false, // نمایش پیام‌های خطا
+    whitelist: true,
+    forbidNonWhitelisted: false,
+    transform: true,
+    disableErrorMessages: false,
     validationError: {
-      target: false, // عدم نمایش object کامل در خطا
-      value: false, // عدم نمایش مقادیر در خطا
+      target: false,
+      value: false,
     }
   }));
   
-  // ✅ تنظیم Handlebars
+  // ✅ تنظیم Handlebars - مسیر اصلاح شد
   app.setViewEngine('hbs');
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setBaseViewsDir(join(__dirname, '..', 'admin', 'views')); // اصلاح شد
   app.useStaticAssets(join(__dirname, '..', 'public'));
   
   // ✅ ثبت Helperهای Handlebars
@@ -37,6 +37,31 @@ async function bootstrap() {
   
   hbs.registerHelper('json', function (obj) {
     return JSON.stringify(obj, null, 2);
+  });
+
+  // Helperهای جدید برای pagination و مقایسه
+  hbs.registerHelper('range', function(start, end) {
+    const result = [];
+    for (let i = start; i <= end; i++) {
+      result.push(i);
+    }
+    return result;
+  });
+
+  hbs.registerHelper('gt', function(a, b) {
+    return a > b;
+  });
+
+  hbs.registerHelper('lt', function(a, b) {
+    return a < b;
+  });
+
+  hbs.registerHelper('add', function(a, b) {
+    return a + b;
+  });
+
+  hbs.registerHelper('subtract', function(a, b) {
+    return a - b;
   });
 
   // ✅ استفاده از PORT environment variable
