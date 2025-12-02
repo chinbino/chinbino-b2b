@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product, ProductStatus } from './entities/product.entity';
@@ -12,10 +12,17 @@ export class ProductsService {
     private readonly productsRepository: Repository<Product>,
   ) {}
 
-  async create(createProductDto: CreateProductDto, sellerId: number) { // تغییر: string → number
+  async create(createProductDto: CreateProductDto, sellerId: string | number) { // تغییر: هر دو نوع
+    // تبدیل sellerId به number اگر string است
+    const sellerIdNum = typeof sellerId === 'string' ? parseInt(sellerId, 10) : sellerId;
+    
+    if (isNaN(sellerIdNum)) {
+      throw new BadRequestException('Invalid seller ID');
+    }
+
     const product = this.productsRepository.create({
       ...createProductDto,
-      seller: { id: sellerId }, // sellerId اکنون number است
+      seller: { id: sellerIdNum }, // اکنون number است
       status: ProductStatus.ACTIVE,
     });
 
@@ -67,10 +74,17 @@ export class ProductsService {
     return { message: 'Product deleted successfully' };
   }
 
-  async findSellerProducts(sellerId: number) { // تغییر: string → number
+  async findSellerProducts(sellerId: string | number) { // تغییر: هر دو نوع
+    // تبدیل sellerId به number اگر string است
+    const sellerIdNum = typeof sellerId === 'string' ? parseInt(sellerId, 10) : sellerId;
+    
+    if (isNaN(sellerIdNum)) {
+      throw new BadRequestException('Invalid seller ID');
+    }
+
     return await this.productsRepository.find({
       where: { 
-        seller: { id: sellerId }, // sellerId اکنون number است
+        seller: { id: sellerIdNum }, // اکنون number است
         status: ProductStatus.ACTIVE 
       },
       relations: ['seller'],
