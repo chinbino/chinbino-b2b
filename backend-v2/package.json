@@ -1,9 +1,43 @@
 {
+  "name": "chinbino-backend-v2",
+  "version": "1.0.0",
+  "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
-    "prebuild": "npm run migration:run || echo 'Migration skipped'",
-    "build": "nest build || (echo 'Build failed, checking issues...' && exit 1)",
-    "postbuild": "node copy-views.js || echo 'copy-views skipped'",
-    "start": "node dist/main",
-    "start:dev": "nest start --watch"
+    "prebuild": "echo '🚨 Starting prebuild...' && npm run migration:run || echo 'Migration skipped'",
+    "build": "echo '🔨 Starting build...' && nest build || (echo '❌ Build failed!' && exit 1)",
+    "postbuild": "echo '📦 Starting postbuild...' && (node copy-views.js || echo 'copy-views skipped')",
+    "start": "echo '🚀 Starting app...' && bash render-start.sh",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "migration:run": "npx typeorm migration:run --dataSource=src/data-source.ts || echo 'Migration skipped'",
+    "migration:generate": "npx typeorm migration:generate --dataSource=src/data-source.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^8.4.7",
+    "@nestjs/core": "^8.4.7",
+    "@nestjs/platform-express": "^8.4.7",
+    "@nestjs/typeorm": "^8.1.4",
+    "@nestjs/jwt": "^8.0.1",
+    "@nestjs/passport": "^8.2.2",
+    "@nestjs/config": "^1.2.1",
+    "typeorm": "^0.3.12",
+    "pg": "^8.8.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "bcrypt": "^5.1.0",
+    "class-validator": "^0.13.2",
+    "class-transformer": "^0.5.1",
+    "hbs": "^4.2.0",
+    "ts-node": "^10.9.1",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^8.2.8",
+    "@types/bcrypt": "^5.0.0",
+    "@types/passport-jwt": "^3.0.9",
+    "@types/passport-local": "^1.0.35",
+    "@types/hbs": "^4.0.1"
   }
 }
