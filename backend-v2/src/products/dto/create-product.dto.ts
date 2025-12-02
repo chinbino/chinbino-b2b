@@ -1,51 +1,89 @@
-import { IsString, IsNumber, IsPositive, Min, IsOptional, IsArray } from 'class-validator';
+import { 
+  IsString, 
+  IsNumber, 
+  IsPositive, 
+  Min, 
+  IsOptional, 
+  IsArray 
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
-  name: string;
+  titleFa: string; // تغییر: name → titleFa
 
-  @IsString()
   @IsOptional()
-  description?: string;
+  @IsString()
+  titleZh?: string;
+
+  @IsOptional()
+  @IsString()
+  titleEn?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionFa?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionZh?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionEn?: string;
 
   @IsNumber()
   @IsPositive()
-  price: number;
+  basePriceCNY: number; // تغییر: price → basePriceCNY
 
-  @IsString()
   @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  basePriceIRR?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  basePriceUSD?: number;
+
+  @IsNumber()
+  @IsPositive()
+  @Min(0)
+  stockUnit: number; // تغییر: stockQuantity → stockUnit
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  unitsPerCarton?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderCartons?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  minOrderUnits?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  cartonWeightKg?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  cartonVolumeM3?: number;
+
+  // فیلدهای اضافه برای هماهنگی
+  @IsOptional()
+  @IsString()
   category?: string;
 
-  @IsArray()
   @IsOptional()
+  @IsArray()
   images?: string[];
-
-  @IsNumber()
-  @IsPositive()
-  @Min(1)
-  stockQuantity: number;
-
-  // فیلدهای جدید کارتن
-  @IsNumber()
-  @IsPositive()
-  @Min(1)
-  unitsPerCarton: number;
-
-  @IsNumber()
-  @IsPositive()
-  @Min(1)
-  minOrderCartons: number;
-
-  @IsNumber()
-  @IsPositive()
-  @Min(1)
-  minOrderUnits: number;
-
-  @IsNumber()
-  @IsPositive()
-  cartonWeightKg: number;
-
-  @IsNumber()
-  @IsPositive()
-  cartonVolumeM3: number;
 }
