@@ -5,9 +5,16 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Product } from '../../products/entities/product.entity';
+
+export enum SellerStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}
 
 @Entity({ name: 'sellers' })
 export class Seller {
@@ -23,14 +30,30 @@ export class Seller {
   @Column({ name: 'company_name', type: 'varchar', length: 255, nullable: true })
   companyName?: string;
 
+  // 🔴 فیلدهای جدید اضافه شد
+  @Column({ 
+    name: 'status',
+    type: 'enum',
+    enum: SellerStatus,
+    default: SellerStatus.PENDING
+  })
+  status: SellerStatus;
+
+  @Column({ name: 'contact_name', type: 'varchar', length: 255, nullable: true })
+  contactName?: string;
+
+  @Column({ name: 'contact_phone', type: 'varchar', length: 100, nullable: true })
+  contactPhone?: string;
+
+  @Column({ name: 'wechat_id', type: 'varchar', length: 255, nullable: true })
+  wechatId?: string;
+
+  // 🔴 فیلدهای موجود
   @Column({ name: 'contact_person', type: 'varchar', length: 255, nullable: true })
   contactPerson?: string;
 
   @Column({ name: 'phone', type: 'varchar', length: 100, nullable: true })
   phone?: string;
-
-  @Column({ name: 'wechat_id', type: 'varchar', length: 255, nullable: true })
-  wechatId?: string;
 
   @Column({ name: 'aliwangwang_id', type: 'varchar', length: 255, nullable: true })
   aliwangwangId?: string;
@@ -49,6 +72,10 @@ export class Seller {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  // 🔴 Soft Delete اضافه شد
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 
   @OneToMany(() => User, (user) => user.seller)
   users: User[];
