@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminController } from './controllers/admin.controller';
+import { AdminSellersController } from './controllers/admin-sellers.controller'; // اضافه شد
 import { AdminContentsController } from './controllers/admin-contents.controller';
-import { Content } from '../cms/entities/content.entity';
-import { ContentRevision } from '../cms/entities/content-revision.entity'; // ✅ اضافه شد
-import { ContentService } from '../cms/services/content.service';
-import { BlockRendererService } from '../cms/services/block-renderer.service';
+import { SellersModule } from '../sellers/sellers.module'; // اضافه شد
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Content, 
-      ContentRevision // ✅ اضافه شد
-    ]),
+    TypeOrmModule.forFeature([]),
+    SellersModule, // اضافه شد - برای دسترسی به SellersService
   ],
-  controllers: [AdminContentsController],
-  providers: [ContentService, BlockRendererService],
+  controllers: [
+    AdminController,
+    AdminSellersController, // اضافه شد
+    AdminContentsController,
+  ],
+  providers: [],
 })
 export class AdminModule {}
