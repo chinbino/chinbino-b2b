@@ -7,59 +7,74 @@ import { existsSync, readdirSync } from 'fs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
-  // مسیر viewها در dist
-  const viewsPath = join(__dirname, 'admin/views');
+  console.log('🔍 ========== بررسی مسیرهای views ==========');
   
-  console.log('🔍 ========== بررسی مسیر views ==========');
-  console.log('📁 مسیر کامل:', viewsPath);
-  console.log('📁 آیا مسیر وجود دارد؟', existsSync(viewsPath));
+  // لیست تمام مسیرهای ممکن
+  const possiblePaths = [
+    // مسیر dist (پس از build)
+    join(__dirname, 'admin/views'),
+    // مسیر src (برای توسعه)
+    join(__dirname, '../src/admin/views'),
+    // مسیر absolute از root
+    join(process.cwd(), 'dist/admin/views'),
+    join(process.cwd(), 'src/admin/views'),
+    // مسیرهای Render
+    '/opt/render/project/src/backend-v2/dist/admin/views',
+    '/opt/render/project/src/backend-v2/src/admin/views',
+  ];
   
-  // اگر مسیر وجود ندارد، مسیرهای ممکن را چک کن
-  if (!existsSync(viewsPath)) {
-    console.log('⚠️ مسیر اصلی یافت نشد، جستجوی مسیرهای جایگزین...');
+  // بررسی هر مسیر
+  let selectedPath = '';
+  possiblePaths.forEach((path, index) => {
+    const exists = existsSync(path);
+    console.log(`${index + 1}. ${path} - ${exists ? '✅ موجود' : '❌ عدم وجود'}`);
     
-    const possiblePaths = [
-      join(__dirname, 'admin/views'),
-      join(__dirname, '../admin/views'),
-      join(process.cwd(), 'dist/admin/views'),
-      join(process.cwd(), 'src/admin/views'),
-      '/opt/render/project/src/backend-v2/dist/admin/views',
-      '/opt/render/project/src/backend-v2/src/admin/views',
-    ];
-    
-    possiblePaths.forEach((path, index) => {
-      console.log(`${index + 1}. ${path} - ${existsSync(path) ? '✅ موجود' : '❌ عدم وجود'}`);
-      if (existsSync(path)) {
+    if (exists && !selectedPath) {
+      selectedPath = path;
+      console.log(`   📁 انتخاب شد!`);
+      
+      // لیست فایل‌ها
+      try {
         const files = readdirSync(path);
-        console.log(`   فایل‌ها: ${files.join(', ')}`);
+        console.log(`   📄 فایل‌ها: ${files.join(', ')}`);
+        
+        // اگر layouts وجود دارد، آن را هم چک کن
+        const layoutsPath = join(path, 'layouts');
+        if (existsSync(layoutsPath)) {
+          const layoutFiles = readdirSync(layoutsPath);
+          console.log(`   🏗️  layouts: ${layoutFiles.join(', ')}`);
+        }
+      } catch (error) {
+        console.log(`   ⚠️ خطا در خواندن: ${error.message}`);
       }
-    });
+    }
+  });
+  
+  if (!selectedPath) {
+    console.error('❌ هیچ مسیر views یافت نشد!');
+    console.log('📁 مسیر جاری:', process.cwd());
+    console.log('📁 محتوای مسیر جاری:', readdirSync(process.cwd()));
   } else {
-    // اگر مسیر وجود دارد، فایل‌ها را لیست کن
-    const files = readdirSync(viewsPath);
-    console.log(`📄 فایل‌های موجود در views: ${files.join(', ')}`);
+    console.log(`\n🎯 انتخاب مسیر: ${selectedPath}`);
+    app.setBaseViewsDir(selectedPath);
+    app.setViewEngine('hbs');
   }
   
   console.log('=========================================\n');
   
-  // تنظیم مسیر viewها
-  app.setBaseViewsDir(viewsPath);
-  app.setViewEngine('hbs');
-  
   // Middleware برای log درخواست‌ها
   app.use((req, res, next) => {
-    console.log(`🌐 درخواست ${req.method}: ${req.url}`);
+    console.log(`🌐 ${req.method} ${req.url}`);
     next();
   });
   
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 10000;
   await app.listen(port);
   
   console.log('\n✅ ========== سرور اجرا شد ==========');
-  console.log(`🌐 آدرس: http://localhost:${port}`);
-  console.log(`🛒 پنل ادمین: http://localhost:${port}/admin/sellers`);
-  console.log(`➕ ایجاد فروشنده: http://localhost:${port}/admin/sellers/create`);
-  console.log(`✏️ ویرایش (نمونه): http://localhost:${port}/admin/sellers/1/edit`);
+  console.log(`🌐 پورت: ${port}`);
+  console.log(`🛒 پنل ادمین: https://chinbino-api-v2.onrender.com/admin/sellers`);
+  console.log(`📁 مسیر views: ${selectedPath || 'تعیین نشد'}`);
   console.log('=====================================\n');
 }
 
