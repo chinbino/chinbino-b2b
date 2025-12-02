@@ -6,7 +6,8 @@ import {
   Param, 
   Put, 
   Delete,
-  ParseIntPipe 
+  ParseIntPipe,
+  Query
 } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
@@ -22,8 +23,9 @@ export class SellersController {
   }
 
   @Get()
-  findAll() {
-    return this.sellersService.findAll();
+  findAll(@Query('includeDeleted') includeDeleted: string) {
+    const includeDeletedBool = includeDeleted === 'true';
+    return this.sellersService.findAll(includeDeletedBool);
   }
 
   @Get(':id')
@@ -47,5 +49,23 @@ export class SellersController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.sellersService.remove(id);
+  }
+
+  // 🔴 endpoint جدید برای restore
+  @Post(':id/restore')
+  restore(@Param('id', ParseIntPipe) id: number) {
+    return this.sellersService.restore(id);
+  }
+
+  // 🔴 endpoint جدید برای حذف کامل
+  @Delete(':id/permanent')
+  permanentDelete(@Param('id', ParseIntPipe) id: number) {
+    return this.sellersService.permanentDelete(id);
+  }
+
+  // 🔴 endpoint تستی برای مشاهده deleted sellers
+  @Get('deleted/list')
+  getDeletedSellers() {
+    return this.sellersService.getDeletedSellers();
   }
 }
