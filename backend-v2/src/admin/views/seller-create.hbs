@@ -1,118 +1,131 @@
-{{! extends layout }}
-{{#extend "layouts/main"}}
-    {{#content "body"}}
+{{! این partial برای ایجاد فروشنده است }}
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
         <h3 class="mb-0">ایجاد فروشنده جدید</h3>
-        <a href="/admin/sellers" class="btn btn-secondary">
-            <i class="bi bi-arrow-right"></i> بازگشت به لیست
-        </a>
+        <p class="text-muted mb-0">فرم ثبت اطلاعات فروشنده جدید</p>
     </div>
+    <a href="/admin/sellers" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-right"></i> بازگشت به لیست
+    </a>
+</div>
 
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-person-plus"></i> اطلاعات فروشنده</h5>
-        </div>
-        <div class="card-body">
-            <form action="/admin/sellers" method="POST">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">نام کامل فروشنده *</label>
-                        <input type="text" class="form-control" id="name" name="name" required 
-                               placeholder="مثال: شرکت تجاری نمونه">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">ایمیل *</label>
-                        <input type="email" class="form-control" id="email" name="email" required 
-                               placeholder="example@domain.com">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="phone" class="form-label">تلفن تماس *</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" required 
-                               placeholder="09123456789">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="website" class="form-label">وبسایت</label>
-                        <input type="url" class="form-control" id="website" name="website" 
-                               placeholder="https://example.com">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="address" class="form-label">آدرس</label>
-                    <textarea class="form-control" id="address" name="address" rows="3" 
-                              placeholder="آدرس کامل فروشنده"></textarea>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="country" class="form-label">کشور</label>
-                        <select class="form-select" id="country" name="country">
-                            <option value="IR" selected>ایران</option>
-                            <option value="CN">چین</option>
-                            <option value="TR">ترکیه</option>
-                            <option value="AE">امارات</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="city" class="form-label">شهر</label>
-                        <input type="text" class="form-control" id="city" name="city" 
-                               placeholder="مثال: تهران">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="postalCode" class="form-label">کد پستی</label>
-                        <input type="text" class="form-control" id="postalCode" name="postalCode" 
-                               placeholder="1234567890">
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                <h5 class="mb-3">تنظیمات حساب</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">وضعیت حساب *</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="active" selected>فعال</option>
-                            <option value="inactive">غیرفعال</option>
-                            <option value="pending">در انتظار تأیید</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="taxId" class="form-label">شناسه مالیاتی</label>
-                        <input type="text" class="form-control" id="taxId" name="taxId" 
-                               placeholder="مثال: 123456789">
-                    </div>
-                </div>
-
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="isVerified" name="isVerified">
-                    <label class="form-check-label" for="isVerified">
-                        حساب تأیید شده است
-                    </label>
-                </div>
-
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" id="sendWelcomeEmail" name="sendWelcomeEmail" checked>
-                    <label class="form-check-label" for="sendWelcomeEmail">
-                        ارسال ایمیل خوش‌آمدگویی
-                    </label>
-                </div>
-
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="reset" class="btn btn-secondary">
-                        <i class="bi bi-x-circle"></i> ریست فرم
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-check-circle"></i> ایجاد فروشنده
-                    </button>
-                </div>
-            </form>
-        </div>
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-person-plus"></i> اطلاعات پایه فروشنده</h5>
     </div>
+    <div class="card-body">
+        <form id="createSellerForm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">نام کامل فروشنده *</label>
+                    <input type="text" class="form-control" id="name" name="name" required 
+                           placeholder="نام شرکت یا فرد فروشنده">
+                    <div class="form-text">نام رسمی فروشنده به فارسی</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">ایمیل *</label>
+                    <input type="email" class="form-control" id="email" name="email" required 
+                           placeholder="example@domain.com">
+                    <div class="form-text">برای ارتباطات و احراز هویت</div>
+                </div>
+            </div>
 
-    {{/content}}
-{{/extend}}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label">تلفن تماس *</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" required 
+                           placeholder="09123456789">
+                    <div class="form-text">شماره همراه یا دفتر</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="website" class="form-label">وبسایت</label>
+                    <input type="url" class="form-control" id="website" name="website" 
+                           placeholder="https://example.com">
+                    <div class="form-text">آدرس سایت رسمی</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">آدرس</label>
+                <textarea class="form-control" id="address" name="address" rows="3" 
+                          placeholder="آدرس کامل فروشنده"></textarea>
+            </div>
+
+            <hr class="my-4">
+
+            <h5 class="mb-3">تنظیمات حساب</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="status" class="form-label">وضعیت حساب *</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="active" selected>فعال</option>
+                        <option value="inactive">غیرفعال</option>
+                        <option value="pending">در انتظار تأیید</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="country" class="form-label">کشور</label>
+                    <select class="form-select" id="country" name="country">
+                        <option value="IR" selected>ایران</option>
+                        <option value="CN">چین</option>
+                        <option value="TR">ترکیه</option>
+                        <option value="AE">امارات</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="language" class="form-label">زبان</label>
+                    <select class="form-select" id="language" name="language">
+                        <option value="fa" selected>فارسی</option>
+                        <option value="en">انگلیسی</option>
+                        <option value="zh">چینی</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="taxId" class="form-label">شناسه مالیاتی</label>
+                    <input type="text" class="form-control" id="taxId" name="taxId" 
+                           placeholder="مثال: 123456789">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="commissionRate" class="form-label">درصد کمیسیون (%)</label>
+                    <input type="number" class="form-control" id="commissionRate" name="commissionRate" 
+                           value="10" min="0" max="50" step="0.5">
+                </div>
+            </div>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="isVerified" name="isVerified">
+                <label class="form-check-label" for="isVerified">
+                    حساب تأیید شده است
+                </label>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="sendWelcomeEmail" name="sendWelcomeEmail" checked>
+                <label class="form-check-label" for="sendWelcomeEmail">
+                    ارسال ایمیل خوش‌آمدگویی به فروشنده
+                </label>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="reset" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> پاک کردن فرم
+                </button>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> ایجاد فروشنده
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('createSellerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('فرم ارسال شد (در فاز بعدی به دیتابیس متصل می‌شود)');
+        window.location.href = '/admin/sellers';
+    });
+</script>
