@@ -1,83 +1,96 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('📦 ========== شروع کپی viewهای ادمین ==========');
+console.log('🚀 ========== اجرای copy-views.js ==========');
 
-// مسیرها
-const srcPath = path.join(__dirname, 'src/admin/views');
-const distPath = path.join(__dirname, 'dist/admin/views');
+// مسیرهای اصلی
+const srcBase = path.join(__dirname, 'src');
+const distBase = path.join(__dirname, 'dist');
 
-console.log('📍 مبدأ:', srcPath);
-console.log('📍 مقصد:', distPath);
+console.log('📍 ریشه پروژه:', __dirname);
+console.log('📍 مسیر src:', srcBase);
+console.log('📍 مسیر dist:', distBase);
 
-// بررسی وجود مبدأ
-if (!fs.existsSync(srcPath)) {
-    console.error('❌ پوشه مبدأ وجود ندارد:', srcPath);
-    console.log('📁 لیست پوشه src:', fs.readdirSync(path.join(__dirname, 'src')));
-    console.log('📁 آیا src/admin وجود دارد؟', fs.existsSync(path.join(__dirname, 'src/admin')));
-    if (fs.existsSync(path.join(__dirname, 'src/admin'))) {
-        console.log('📁 محتوای src/admin:', fs.readdirSync(path.join(__dirname, 'src/admin')));
-    }
-    process.exit(1);
+// بررسی وجود src
+if (!fs.existsSync(srcBase)) {
+  console.error('❌ پوشه src وجود ندارد!');
+  process.exit(1);
 }
 
-// بررسی فایل‌های مبدأ
-const files = fs.readdirSync(srcPath);
-console.log(`📄 تعداد فایل‌ها در مبدأ: ${files.length}`);
-if (files.length === 0) {
-    console.error('❌ هیچ فایلی در مبدأ نیست!');
-    process.exit(1);
+// پوشه views ادمین
+const adminViewsSrc = path.join(srcBase, 'admin/views');
+const adminViewsDist = path.join(distBase, 'admin/views');
+
+console.log('\n🔍 بررسی پوشه‌های views:');
+console.log('   مبدأ:', adminViewsSrc);
+console.log('   مقصد:', adminViewsDist);
+console.log('   مبدأ وجود دارد:', fs.existsSync(adminViewsSrc));
+
+if (!fs.existsSync(adminViewsSrc)) {
+  console.error('❌ پوشه views ادمین در مبدأ یافت نشد!');
+  console.log('📁 محتوای src/admin:', fs.readdirSync(path.join(srcBase, 'admin')));
+  process.exit(1);
 }
-console.log('📋 فایل‌های مبدأ:', files.join(', '));
 
-// حذف dist قدیمی اگر وجود دارد
-if (fs.existsSync(distPath)) {
-    console.log('🗑️ حذف dist قدیمی...');
-    fs.rmSync(distPath, { recursive: true, force: true });
+// حذف پوشه مقصد اگر وجود دارد
+if (fs.existsSync(adminViewsDist)) {
+  console.log('🗑️ حذف پوشه dist/admin/views قدیمی...');
+  fs.rmSync(adminViewsDist, { recursive: true, force: true });
 }
 
-// ایجاد پوشه‌های لازم
-console.log('📂 ایجاد پوشه مقصد...');
-fs.mkdirSync(distPath, { recursive: true });
+// ایجاد پوشه‌های لازم در dist
+console.log('📂 ایجاد پوشه‌های dist...');
+fs.mkdirSync(path.join(distBase, 'admin'), { recursive: true });
+fs.mkdirSync(adminViewsDist, { recursive: true });
 
-// کپی هر فایل
-let copiedCount = 0;
-files.forEach(file => {
-    const srcFile = path.join(srcPath, file);
-    const distFile = path.join(distPath, file);
+// تابع کپی بازگشتی
+function copyDirectory(src, dest) {
+  const items = fs.readdirSync(src);
+  
+  items.forEach(item => {
+    const srcPath = path.join(src, item);
+    const destPath = path.join(dest, item);
     
-    try {
-        // بررسی آیا فایل است یا پوشه
-        if (fs.lstatSync(srcFile).isDirectory()) {
-            // کپی بازگشتی پوشه
-            fs.cpSync(srcFile, distFile, { recursive: true });
-            console.log(`📁 کپی پوشه: ${file}/`);
-        } else {
-            // کپی فایل
-            fs.copyFileSync(srcFile, distFile);
-            console.log(`✅ کپی فایل: ${file}`);
-        }
-        copiedCount++;
-    } catch (error) {
-        console.error(`❌ خطا در کپی ${file}:`, error.message);
+    const stat = fs.statSync(srcPath);
+    
+    if (stat.isDirectory()) {
+      // کپی پوشه
+      fs.mkdirSync(destPath, { recursive: true });
+      copyDirectory(srcPath, destPath);
+      console.log(`📁 کپی پوشه: admin/views/${path.relative(adminViewsSrc, srcPath)}/`);
+    } else if (stat.isFile()) {
+      // کپی فایل
+      fs.copyFileSync(srcPath, destPath);
+      console.log(`✅ کپی فایل: ${item}`);
     }
-});
+  });
+}
+
+// اجرای کپی
+console.log('\n📦 شروع کپی viewها...');
+copyDirectory(adminViewsSrc, adminViewsDist);
 
 // تأیید کپی
-console.log(`\n📊 ${copiedCount} از ${files.length} فایل کپی شدند`);
+console.log('\n🔍 تأیید کپی:');
+const srcFiles = fs.readdirSync(adminViewsSrc);
+const distFiles = fs.readdirSync(adminViewsDist);
 
-if (fs.existsSync(distPath)) {
-    const distFiles = fs.readdirSync(distPath);
-    console.log('📋 فایل‌های مقصد:', distFiles.join(', '));
-    
-    // بررسی layout
-    const layoutsPath = path.join(distPath, 'layouts');
-    if (fs.existsSync(layoutsPath)) {
-        console.log('📁 محتوای layouts:', fs.readdirSync(layoutsPath));
-    }
-} else {
-    console.error('❌ پوشه مقصد ایجاد نشد!');
-    process.exit(1);
+console.log(`   تعداد فایل‌های مبدأ: ${srcFiles.length}`);
+console.log(`   تعداد فایل‌های مقصد: ${distFiles.length}`);
+console.log(`   فایل‌های مقصد: ${distFiles.join(', ')}`);
+
+// بررسی layouts
+const layoutsDist = path.join(adminViewsDist, 'layouts');
+if (fs.existsSync(layoutsDist)) {
+  const layoutFiles = fs.readdirSync(layoutsDist);
+  console.log(`   فایل‌های layouts: ${layoutFiles.join(', ')}`);
 }
 
-console.log('🎉 ========== کپی viewها کامل شد ==========\n');
+if (srcFiles.length === distFiles.length) {
+  console.log('\n🎉 ========== کپی viewها با موفقیت انجام شد ==========');
+  console.log(`✅ ${srcFiles.length} فایل کپی شدند`);
+} else {
+  console.error(`\n⚠️ تعداد فایل‌ها مطابقت ندارد!`);
+  console.log(`   مبدأ: ${srcFiles.length}، مقصد: ${distFiles.length}`);
+  process.exit(1);
+}
