@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity'; // از کامنت درآورید
+import { User } from '../../users/entities/user.entity';
 import { Product } from '../../products/entities/product.entity';
 
 @Entity({ name: 'sellers' })
@@ -50,7 +50,6 @@ export class Seller {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // از کامنت درآورید
   @OneToMany(() => User, (user) => user.seller)
   users: User[];
 
