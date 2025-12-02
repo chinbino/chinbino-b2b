@@ -1,4 +1,12 @@
-import { IsOptional, IsString, Length, Matches } from 'class-validator';
+import { 
+  IsOptional, 
+  IsString, 
+  Length, 
+  Matches, 
+  IsEmail,
+  IsEnum 
+} from 'class-validator';
+import { SellerStatus } from '../entities/seller.entity';
 
 export class UpdateSellerDto {
   @IsOptional()
@@ -17,19 +25,37 @@ export class UpdateSellerDto {
   companyName?: string;
 
   @IsOptional()
+  @IsEnum(SellerStatus)
+  status?: SellerStatus;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 255)
+  contactName?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^\+?[1-9]\d{1,14}$/, {
+    message: 'Contact phone must be a valid international phone number'
+  })
+  contactPhone?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(3, 50)
+  wechatId?: string;
+
+  @IsOptional()
   @IsString()
   @Length(2, 255)
   contactPerson?: string;
 
   @IsOptional()
   @IsString()
-  @Matches(/^\+?[1-9]\d{1,14}$/)
+  @Matches(/^\+?[1-9]\d{1,14}$/, {
+    message: 'Phone must be a valid international phone number'
+  })
   phone?: string;
-
-  @IsOptional()
-  @IsString()
-  @Length(3, 50)
-  wechatId?: string;
 
   @IsOptional()
   @IsString()
@@ -48,4 +74,9 @@ export class UpdateSellerDto {
   @IsOptional()
   @IsString()
   descriptionFa?: string;
+
+  @IsOptional()
+  @IsEmail({}, { message: 'Invalid email format' })
+  @Length(5, 255)
+  contactEmail?: string;
 }
