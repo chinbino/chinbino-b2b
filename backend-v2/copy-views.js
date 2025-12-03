@@ -1,84 +1,77 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 ========== کپی viewها برای محیط تولید ==========');
+console.log('🎯 ========== کپی viewها - مسیر واقعی پروژه ==========');
 
-// مسیر مبدأ: src/admin/views
-const srcPath = path.join(__dirname, 'src/admin/views');
+// در Render: __dirname = /opt/render/project/src/backend-v2
+// در GitHub: __dirname = /chinbino-b2b/backend-v2
 
-// مسیر مقصد: dist/views/admin (برای محیط تولید)
-const distPath = path.join(__dirname, 'dist/views/admin');
+console.log('📍 ریشه پروژه NestJS (__dirname):', __dirname);
+console.log('📁 محتوای ریشه:', fs.readdirSync(__dirname));
 
-console.log('📁 مبدأ (src):', srcPath);
-console.log('📁 مقصد (dist):', distPath);
-console.log('📁 مبدأ وجود دارد؟', fs.existsSync(srcPath));
+// مسیرهای ABSOLUTE REAL
+const ABSOLUTE_SRC_PATH = path.join(__dirname, 'src/admin/views');
+const ABSOLUTE_DIST_PATH = path.join(__dirname, 'dist/views/admin');
 
-// بررسی وجود مبدأ
-if (!fs.existsSync(srcPath)) {
-    console.error('❌ پوشه مبدأ viewها یافت نشد!');
-    console.log('📁 بررسی ساختار src:');
+console.log('📁 مبدأ ABSOLUTE:', ABSOLUTE_SRC_PATH);
+console.log('📁 مقصد ABSOLUTE:', ABSOLUTE_DIST_PATH);
+console.log('📁 مبدأ وجود دارد؟', fs.existsSync(ABSOLUTE_SRC_PATH));
+
+// اگر مبدأ وجود ندارد، ساختار را بررسی کن
+if (!fs.existsSync(ABSOLUTE_SRC_PATH)) {
+    console.error('❌ مبدأ viewها یافت نشد! ساختار:');
     
-    const srcDir = path.join(__dirname, 'src');
-    if (fs.existsSync(srcDir)) {
-        console.log('📁 محتوای src:', fs.readdirSync(srcDir));
+    // دیباگ کامل
+    if (fs.existsSync(path.join(__dirname, 'src'))) {
+        const srcContent = fs.readdirSync(path.join(__dirname, 'src'));
+        console.log('📁 محتوای src:', srcContent);
         
-        const adminDir = path.join(srcDir, 'admin');
-        if (fs.existsSync(adminDir)) {
-            console.log('📁 محتوای src/admin:', fs.readdirSync(adminDir));
+        if (srcContent.includes('admin')) {
+            const adminContent = fs.readdirSync(path.join(__dirname, 'src/admin'));
+            console.log('📁 محتوای src/admin:', adminContent);
         }
     }
     
-    console.log('⚠️ ادامه بدون کپی viewها...');
-    process.exit(0);
+    console.log('🚫 نمی‌توان ادامه داد');
+    process.exit(1);
 }
 
 // لیست فایل‌های مبدأ
-const srcFiles = fs.readdirSync(srcPath);
+const srcFiles = fs.readdirSync(ABSOLUTE_SRC_PATH);
 console.log(`📄 ${srcFiles.length} فایل در مبدأ:`, srcFiles.join(', '));
 
-// حذف مقصد قدیمی اگر وجود دارد
-if (fs.existsSync(distPath)) {
+// حذف dist قدیمی
+if (fs.existsSync(ABSOLUTE_DIST_PATH)) {
     console.log('🗑️ حذف dist قدیمی...');
-    fs.rmSync(distPath, { recursive: true, force: true });
+    fs.rmSync(ABSOLUTE_DIST_PATH, { recursive: true, force: true });
 }
 
-// ایجاد پوشه‌های مقصد
-console.log('📂 ایجاد پوشه‌های dist...');
-fs.mkdirSync(path.dirname(distPath), { recursive: true });
+// ایجاد پوشه dist/views/admin
+console.log('📂 ایجاد پوشه مقصد...');
+fs.mkdirSync(path.dirname(ABSOLUTE_DIST_PATH), { recursive: true });
 
-// کپی بازگشتی
-console.log('📦 شروع کپی viewها...');
+// کپی
+console.log('📦 کپی viewها...');
 try {
-    fs.cpSync(srcPath, distPath, { recursive: true });
+    fs.cpSync(ABSOLUTE_SRC_PATH, ABSOLUTE_DIST_PATH, { 
+        recursive: true, 
+        force: true,
+        preserveTimestamps: true
+    });
     console.log('✅ کپی موفق!');
 } catch (error) {
     console.error('❌ خطا در کپی:', error.message);
-    console.log('⚠️ ادامه بدون viewها...');
-    process.exit(0);
+    process.exit(1);
 }
 
-// تأیید کپی
-const distFiles = fs.readdirSync(distPath);
+// تأیید
+const distFiles = fs.readdirSync(ABSOLUTE_DIST_PATH);
 console.log(`📄 ${distFiles.length} فایل در مقصد:`, distFiles.join(', '));
 
 // بررسی layouts
-const layoutsPath = path.join(distPath, 'layouts');
+const layoutsPath = path.join(ABSOLUTE_DIST_PATH, 'layouts');
 if (fs.existsSync(layoutsPath)) {
-    const layoutFiles = fs.readdirSync(layoutsPath);
-    console.log(`📁 ${layoutFiles.length} فایل در layouts:`, layoutFiles.join(', '));
+    console.log('📁 layouts:', fs.readdirSync(layoutsPath));
 }
 
-// همچنین به مسیر قدیمی هم کپی کن (برای اطمینان)
-const oldDistPath = path.join(__dirname, 'dist/admin/views');
-if (oldDistPath !== distPath) {
-    console.log('\n📦 کپی اضافی برای سازگاری...');
-    if (fs.existsSync(oldDistPath)) {
-        fs.rmSync(oldDistPath, { recursive: true, force: true });
-    }
-    fs.mkdirSync(path.dirname(oldDistPath), { recursive: true });
-    fs.cpSync(srcPath, oldDistPath, { recursive: true });
-    console.log(`✅ کپی به ${path.relative(__dirname, oldDistPath)}`);
-}
-
-console.log('\n🎉 ========== آماده سازی viewها کامل شد ==========');
-console.log(`✅ ${srcFiles.length} فایل به dist کپی شدند`);
+console.log('🎉 ========== کپی با مسیر واقعی کامل شد ==========');
