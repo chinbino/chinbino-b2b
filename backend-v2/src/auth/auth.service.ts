@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -9,29 +10,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerData: {
-    email?: string;
-    phone?: string;
-    password: string;
-    fullName?: string;
-    companyName?: string;
-    role?: 'buyer' | 'seller';
-  }) {
-    // بررسی وجود رمز عبور
-    console.log('Register Data received:', registerData); // برای دیباگ
-    
-    if (!registerData.password) {
-      throw new BadRequestException('رمز عبور الزامی است');
-    }
+  async register(registerDto: RegisterDto) {
+    // استفاده از DTO برای validation
+    const { email, password, fullName, phone, companyName, role } = registerDto;
 
     // ایجاد کاربر جدید
     const user = await this.usersService.create({
-      email: registerData.email,
-      phone: registerData.phone,
-      password: registerData.password, // مطمئن شو این خط درست باشه
-      fullName: registerData.fullName,
-      companyName: registerData.companyName,
-      role: registerData.role,
+      email,
+      phone,
+      password, // مطمئن شو این خط درست باشه
+      fullName,
+      companyName,
+      role,
     });
 
     // ایجاد توکن
@@ -43,6 +33,8 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      expires_in: 24 * 60 * 60, // 24 ساعت به ثانیه
+      token_type: 'Bearer',
       user: {
         id: user.id,
         email: user.email,
@@ -52,6 +44,8 @@ export class AuthService {
         companyName: user.companyName,
         preferredLanguage: user.preferredLanguage,
         preferredCurrency: user.preferredCurrency,
+        status: user.status,
+        createdAt: user.createdAt,
       },
     };
   }
@@ -69,6 +63,11 @@ export class AuthService {
       throw new UnauthorizedException('حساب کاربری غیرفعال است');
     }
 
+    // بررسی isActive
+    if (!user.isActive) {
+      throw new UnauthorizedException('حساب کاربری غیرفعال است');
+    }
+
     // ایجاد توکن
     const payload = { 
       sub: user.id, 
@@ -78,6 +77,8 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      expires_in: 24 * 60 * 60, // 24 ساعت به ثانیه
+      token_type: 'Bearer',
       user: {
         id: user.id,
         email: user.email,
@@ -86,11 +87,18 @@ export class AuthService {
         companyName: user.companyName,
         preferredLanguage: user.preferredLanguage,
         preferredCurrency: user.preferredCurrency,
+        status: user.status,
+        createdAt: user.createdAt,
       },
     };
   }
 
   async getProfile(userId: string) {
     return await this.usersService.findById(userId);
+  }
+
+  // متد جدید برای validateUser (مورد استفاده در LocalStrategy)
+  async validateUser(email: string, password: string): Promise<any> {
+    return await this.usersService.validateUser(email, password);
   }
 }
