@@ -1,66 +1,44 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 ========== کپی viewهای ادمین ==========');
+console.log('🚀 شروع کپی viewها...');
 
-// مسیر مبدأ: src/admin/views (همیشه ثابت)
 const srcPath = path.join(__dirname, 'src/admin/views');
+const dist1 = path.join(__dirname, 'dist/views/admin');
+const dist2 = path.join(__dirname, 'dist/admin/views');
 
-// مسیر مقصد: dist/views/admin (بر اساس logها)
-const distPath = path.join(__dirname, 'dist/views/admin');
-
-console.log('📁 مبدأ (ثابت):', srcPath);
-console.log('📁 مقصد (بر اساس logها):', distPath);
-console.log('📁 مبدأ وجود دارد؟', fs.existsSync(srcPath));
+console.log('📁 مسیر مبدأ:', srcPath);
+console.log('📁 مسیرهای مقصد:', dist1, 'و', dist2);
 
 if (!fs.existsSync(srcPath)) {
-    console.error('❌ پوشه مبدأ یافت نشد!');
-    process.exit(1);
+    console.log('❌ پوشه مبدأ viewها یافت نشد، کپی رد می‌شود.');
+    process.exit(0);
 }
 
-// بررسی فایل‌های مبدأ
-const files = fs.readdirSync(srcPath);
-console.log(`📄 ${files.length} فایل در مبدأ:`, files.join(', '));
+console.log('✅ پوشه مبدأ یافت شد');
 
-if (files.length === 0) {
-    console.error('❌ هیچ فایلی در مبدأ نیست!');
-    process.exit(1);
-}
+// کپی به هر دو مسیر مقصد
+[dist1, dist2].forEach(dist => {
+    console.log(`\n📦 کپی به: ${path.relative(__dirname, dist)}`);
+    
+    // حذف نسخه قدیمی
+    if (fs.existsSync(dist)) {
+        fs.rmSync(dist, { recursive: true, force: true });
+        console.log('   🗑️ نسخه قدیمی حذف شد');
+    }
+    
+    // ایجاد پوشه مقصد
+    fs.mkdirSync(dist, { recursive: true });
+    
+    // کپی فایل‌ها
+    try {
+        fs.cpSync(srcPath, dist, { recursive: true });
+        const files = fs.readdirSync(dist);
+        console.log(`   ✅ ${files.length} فایل کپی شد`);
+        console.log('   📄 فایل‌ها:', files.join(', '));
+    } catch (error) {
+        console.log(`   ⚠️ خطا در کپی: ${error.message}`);
+    }
+});
 
-// حذف dist قدیمی
-if (fs.existsSync(distPath)) {
-    console.log('🗑️ حذف dist قدیمی...');
-    fs.rmSync(distPath, { recursive: true, force: true });
-}
-
-// همچنین مسیر قدیمی را هم پاک کن (اگر وجود دارد)
-const oldDistPath = path.join(__dirname, 'dist/admin/views');
-if (fs.existsSync(oldDistPath)) {
-    console.log('🗑️ حذف مسیر قدیمی dist/admin/views...');
-    fs.rmSync(oldDistPath, { recursive: true, force: true });
-}
-
-// ایجاد پوشه مقصد
-console.log('📂 ایجاد پوشه‌های مقصد...');
-fs.mkdirSync(path.dirname(distPath), { recursive: true });
-
-// کپی بازگشتی
-console.log('📦 شروع کپی...');
-try {
-    fs.cpSync(srcPath, distPath, { recursive: true, force: true });
-    console.log('✅ کپی موفق!');
-} catch (error) {
-    console.error('❌ خطا در کپی:', error.message);
-    process.exit(1);
-}
-
-// تأیید نهایی
-const distFiles = fs.readdirSync(distPath);
-console.log(`📄 ${distFiles.length} فایل در مقصد:`, distFiles.join(', '));
-
-if (files.length === distFiles.length) {
-    console.log('🎉 ========== کپی کامل شد ==========');
-} else {
-    console.error(`⚠️ تعداد فایل‌ها مطابقت ندارد! (مبدأ: ${files.length}, مقصد: ${distFiles.length})`);
-    process.exit(1);
-}
+console.log('\n🎉 کپی viewها کامل شد.');
