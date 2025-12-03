@@ -1,4 +1,4 @@
-// src/auth/dto/register.dto.ts - اصلاح شده
+// src/auth/dto/register.dto.ts - کد کامل
 import { IsEmail, IsString, MinLength, IsOptional, IsEnum } from 'class-validator';
 
 export class RegisterDto {
@@ -23,5 +23,5 @@ export class RegisterDto {
 
   @IsEnum(['buyer', 'seller', 'admin']) // ✅ admin اضافه شد
   @IsOptional()
-  role?: 'buyer' | 'seller' | 'admin'; // ✅ نوع رو به‌روز کن
+  role?: 'buyer' | 'seller' | 'admin';
 }
