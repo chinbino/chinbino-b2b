@@ -8,8 +8,12 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "start:debug": "nest start --debug --watch",
-    "migration:run": "npx typeorm migration:run --dataSource=src/data-source.ts || echo 'Migration skipped'",
-    "migration:generate": "npx typeorm migration:generate --dataSource=src/data-source.ts"
+    "migration:run": "npx typeorm migration:run --dataSource=src/database/data-source.ts || echo 'Migration skipped'",
+    "migration:generate": "npx typeorm migration:generate --dataSource=src/database/data-source.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d src/database/data-source.ts",
+    "typeorm:generate-migration": "npm run typeorm migration:generate -- -d src/database/data-source.ts",
+    "typeorm:create-migration": "npm run typeorm migration:create -- -d src/database/data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -36,6 +40,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/passport-jwt": "^3.0.9",
     "@types/passport-local": "^1.0.35",
-    "@types/hbs": "^4.0.1"
+    "@types/hbs": "^4.0.1",
+    "@types/node": "^20.0.0"
   }
 }
