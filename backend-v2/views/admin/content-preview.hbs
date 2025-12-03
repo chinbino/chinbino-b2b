@@ -1,85 +1,0 @@
-{{!< layouts/admin}}
-
-{{#content "title"}}پیش‌نمایش محتوا{{/content}}
-
-<div class="max-w-6xl mx-auto">
-    <div class="mb-6 flex justify-between items-center">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-800">پیش‌نمایش محتوا</h2>
-            <p class="text-gray-600 mt-1">{{content.title.fa}} | زبان: {{locale}}</p>
-        </div>
-        <div class="flex gap-2">
-            <a href="/admin/contents/{{content.id}}/edit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                ✏️ ویرایش
-            </a>
-            <a href="/api/render/{{content.slug}}?locale={{locale}}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
-                🌐 مشاهده در صفحه جدا
-            </a>
-            <a href="/admin/contents" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg transition">
-                ↩️ بازگشت
-            </a>
-        </div>
-    </div>
-
-    <!-- اطلاعات محتوا -->
-    <div class="bg-white rounded-lg shadow mb-6">
-        <div class="border-b px-6 py-4">
-            <h3 class="text-lg font-medium">اطلاعات محتوا</h3>
-        </div>
-        <div class="p-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                    <span class="font-medium text-gray-500">شناسه:</span>
-                    <span class="ml-2">{{content.id}}</span>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-500">نوع:</span>
-                    <span class="ml-2">{{content.type}}</span>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-500">وضعیت:</span>
-                    <span class="ml-2">{{content.status}}</span>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-500">تاریخ ایجاد:</span>
-                    <span class="ml-2">{{formatDate content.createdAt}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- پیش‌نمایش محتوا -->
-    <div class="bg-white rounded-lg shadow">
-        <div class="border-b px-6 py-4">
-            <h3 class="text-lg font-medium">پیش‌نمایش رندر شده</h3>
-        </div>
-        <div class="p-6">
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 min-h-96">
-                {{{bodyHtml}}}
-            </div>
-        </div>
-    </div>
-
-    <!-- اطلاعات فنی -->
-    <div class="bg-gray-50 rounded-lg shadow mt-6">
-        <div class="border-b px-6 py-4">
-            <h3 class="text-lg font-medium">اطلاعات فنی</h3>
-        </div>
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="font-medium mb-2">بلوک‌ها ({{content.blocks.length}})</h4>
-                    <div class="bg-white border rounded p-3 text-sm">
-                        <pre class="whitespace-pre-wrap">{{json content.blocks}}</pre>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-medium mb-2">سئو</h4>
-                    <div class="bg-white border rounded p-3 text-sm">
-                        <pre class="whitespace-pre-wrap">{{json content.seo}}</pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
