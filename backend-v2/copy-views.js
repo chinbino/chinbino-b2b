@@ -1,44 +1,84 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 شروع کپی viewها...');
+console.log('🚀 ========== کپی viewها برای محیط تولید ==========');
 
+// مسیر مبدأ: src/admin/views
 const srcPath = path.join(__dirname, 'src/admin/views');
-const dist1 = path.join(__dirname, 'dist/views/admin');
-const dist2 = path.join(__dirname, 'dist/admin/views');
 
-console.log('📁 مسیر مبدأ:', srcPath);
-console.log('📁 مسیرهای مقصد:', dist1, 'و', dist2);
+// مسیر مقصد: dist/views/admin (برای محیط تولید)
+const distPath = path.join(__dirname, 'dist/views/admin');
 
+console.log('📁 مبدأ (src):', srcPath);
+console.log('📁 مقصد (dist):', distPath);
+console.log('📁 مبدأ وجود دارد؟', fs.existsSync(srcPath));
+
+// بررسی وجود مبدأ
 if (!fs.existsSync(srcPath)) {
-    console.log('❌ پوشه مبدأ viewها یافت نشد، کپی رد می‌شود.');
+    console.error('❌ پوشه مبدأ viewها یافت نشد!');
+    console.log('📁 بررسی ساختار src:');
+    
+    const srcDir = path.join(__dirname, 'src');
+    if (fs.existsSync(srcDir)) {
+        console.log('📁 محتوای src:', fs.readdirSync(srcDir));
+        
+        const adminDir = path.join(srcDir, 'admin');
+        if (fs.existsSync(adminDir)) {
+            console.log('📁 محتوای src/admin:', fs.readdirSync(adminDir));
+        }
+    }
+    
+    console.log('⚠️ ادامه بدون کپی viewها...');
     process.exit(0);
 }
 
-console.log('✅ پوشه مبدأ یافت شد');
+// لیست فایل‌های مبدأ
+const srcFiles = fs.readdirSync(srcPath);
+console.log(`📄 ${srcFiles.length} فایل در مبدأ:`, srcFiles.join(', '));
 
-// کپی به هر دو مسیر مقصد
-[dist1, dist2].forEach(dist => {
-    console.log(`\n📦 کپی به: ${path.relative(__dirname, dist)}`);
-    
-    // حذف نسخه قدیمی
-    if (fs.existsSync(dist)) {
-        fs.rmSync(dist, { recursive: true, force: true });
-        console.log('   🗑️ نسخه قدیمی حذف شد');
-    }
-    
-    // ایجاد پوشه مقصد
-    fs.mkdirSync(dist, { recursive: true });
-    
-    // کپی فایل‌ها
-    try {
-        fs.cpSync(srcPath, dist, { recursive: true });
-        const files = fs.readdirSync(dist);
-        console.log(`   ✅ ${files.length} فایل کپی شد`);
-        console.log('   📄 فایل‌ها:', files.join(', '));
-    } catch (error) {
-        console.log(`   ⚠️ خطا در کپی: ${error.message}`);
-    }
-});
+// حذف مقصد قدیمی اگر وجود دارد
+if (fs.existsSync(distPath)) {
+    console.log('🗑️ حذف dist قدیمی...');
+    fs.rmSync(distPath, { recursive: true, force: true });
+}
 
-console.log('\n🎉 کپی viewها کامل شد.');
+// ایجاد پوشه‌های مقصد
+console.log('📂 ایجاد پوشه‌های dist...');
+fs.mkdirSync(path.dirname(distPath), { recursive: true });
+
+// کپی بازگشتی
+console.log('📦 شروع کپی viewها...');
+try {
+    fs.cpSync(srcPath, distPath, { recursive: true });
+    console.log('✅ کپی موفق!');
+} catch (error) {
+    console.error('❌ خطا در کپی:', error.message);
+    console.log('⚠️ ادامه بدون viewها...');
+    process.exit(0);
+}
+
+// تأیید کپی
+const distFiles = fs.readdirSync(distPath);
+console.log(`📄 ${distFiles.length} فایل در مقصد:`, distFiles.join(', '));
+
+// بررسی layouts
+const layoutsPath = path.join(distPath, 'layouts');
+if (fs.existsSync(layoutsPath)) {
+    const layoutFiles = fs.readdirSync(layoutsPath);
+    console.log(`📁 ${layoutFiles.length} فایل در layouts:`, layoutFiles.join(', '));
+}
+
+// همچنین به مسیر قدیمی هم کپی کن (برای اطمینان)
+const oldDistPath = path.join(__dirname, 'dist/admin/views');
+if (oldDistPath !== distPath) {
+    console.log('\n📦 کپی اضافی برای سازگاری...');
+    if (fs.existsSync(oldDistPath)) {
+        fs.rmSync(oldDistPath, { recursive: true, force: true });
+    }
+    fs.mkdirSync(path.dirname(oldDistPath), { recursive: true });
+    fs.cpSync(srcPath, oldDistPath, { recursive: true });
+    console.log(`✅ کپی به ${path.relative(__dirname, oldDistPath)}`);
+}
+
+console.log('\n🎉 ========== آماده سازی viewها کامل شد ==========');
+console.log(`✅ ${srcFiles.length} فایل به dist کپی شدند`);
