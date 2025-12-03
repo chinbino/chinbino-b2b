@@ -23,11 +23,16 @@ export class AuthController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(@Request() req) {
-    // تغییر از req.user.sub به req.user.id چون در JWT Strategy برگردوندیم
-    return this.authService.getProfile(req.user.id);
+    // چندین روش برای گرفتن userId
+    const userId = req.user?.id || req.user?.userId || req.user?.sub;
+    
+    if (!userId) {
+      throw new UnauthorizedException('User ID not found in token');
+    }
+    
+    return this.authService.getProfile(userId);
   }
 
-  // اضافه کردن endpoint برای تست JWT
   @Get('test-protected')
   @UseGuards(JwtAuthGuard)
   async testProtected(@Request() req) {
@@ -35,6 +40,27 @@ export class AuthController {
       message: 'شما با موفقیت وارد شده‌اید',
       user: req.user,
       timestamp: new Date().toISOString(),
+    };
+  }
+
+  // 🔍 اضافه شده: endpoint دیباگ
+  @Get('debug-user')
+  @UseGuards(JwtAuthGuard)
+  debugUser(@Request() req) {
+    return {
+      message: 'Debug JWT Authentication',
+      success: true,
+      userObject: req.user,
+      availableKeys: Object.keys(req.user || {}),
+      checks: {
+        hasId: !!req.user?.id,
+        hasUserId: !!req.user?.userId,
+        hasSub: !!req.user?.sub,
+        idValue: req.user?.id,
+        userIdValue: req.user?.userId,
+        subValue: req.user?.sub
+      },
+      timestamp: new Date().toISOString()
     };
   }
 }
