@@ -4,45 +4,20 @@ import { Controller, Get, Render, Param } from '@nestjs/common';
 export class AdminSellersController {
   
   @Get()
-  @Render('sellers-list') // مستقیم به sellers-list.hbs
+  @Render('sellers-list') // فایل: sellers-list.hbs
   getSellers() {
-    const sellers = [
-      {
-        id: 1,
-        name: 'شرکت نمونه ایرانیان',
-        email: 'info@iranian-sample.com',
-        phone: '021-12345678',
-        status: 'active',
-        isVerified: true,
-        createdAt: '۱۴۰۳/۰۹/۱۲',
-        productCount: 42,
-        orderCount: 128
-      },
-      {
-        id: 2,
-        name: 'فروشگاه آنلاین تست',
-        email: 'sales@test-shop.com',
-        phone: '09123456789',
-        status: 'inactive',
-        isVerified: false,
-        createdAt: '۱۴۰۳/۰۹/۱۰',
-        productCount: 15,
-        orderCount: 37
-      }
-    ];
-
     return {
       title: 'مدیریت فروشندگان',
-      sellers: sellers,
-      totalSellers: sellers.length,
-      activeSellers: sellers.filter(s => s.status === 'active').length,
-      recentSellers: 1,
+      sellers: [
+        { id: 1, name: 'شرکت نمونه', email: 'test@example.com', status: 'active' },
+        { id: 2, name: 'فروشگاه تست', email: 'test2@example.com', status: 'inactive' }
+      ],
       currentDate: new Date().toLocaleDateString('fa-IR')
     };
   }
 
   @Get('create')
-  @Render('seller-create') // مستقیم به seller-create.hbs
+  @Render('seller-create') // فایل: seller-create.hbs
   getCreatePage() {
     return {
       title: 'ایجاد فروشنده جدید',
@@ -51,28 +26,16 @@ export class AdminSellersController {
   }
 
   @Get(':id/edit')
-  @Render('seller-edit') // مستقیم به seller-edit.hbs
+  @Render('seller-edit') // فایل: seller-edit.hbs
   getEditPage(@Param('id') id: string) {
-    const seller = {
-      id: parseInt(id),
-      name: 'شرکت نمونه ایرانیان',
-      email: 'info@iranian-sample.com',
-      phone: '021-12345678',
-      website: 'https://iranian-sample.com',
-      address: 'تهران، خیابان ولیعصر، پلاک ۱۲۳',
-      status: 'active',
-      taxId: '123456789',
-      commission: 15.5,
-      isVerified: true,
-      createdAt: '۱۴۰۳/۰۹/۱۲',
-      updatedAt: '۱۴۰۳/۰۹/۱۳',
-      productCount: 42,
-      orderCount: 128
-    };
-
     return {
       title: `ویرایش فروشنده #${id}`,
-      seller: seller,
+      seller: {
+        id: parseInt(id),
+        name: `شرکت نمونه ${id}`,
+        email: `seller${id}@example.com`,
+        status: 'active'
+      },
       currentDate: new Date().toLocaleDateString('fa-IR')
     };
   }
