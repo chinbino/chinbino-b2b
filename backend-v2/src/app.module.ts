@@ -8,24 +8,19 @@ import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms/cms.module';
 import { AdminModule } from './admin/admin.module';
 import { SellersModule } from './sellers/sellers.module';
-import { TestModule } from './test/test.module'; // اضافه شد
+import { TestModule } from './test/test.module';
+import { dataSourceOptions } from './database/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      synchronize: process.env.NODE_ENV !== 'production',
-      autoLoadEntities: true,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions), // تغییر اصلی اینجاست
     ProductsModule,
     UsersModule,
     AuthModule,
     CmsModule,
     AdminModule,
     SellersModule,
-    TestModule, // اضافه شد
+    TestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
