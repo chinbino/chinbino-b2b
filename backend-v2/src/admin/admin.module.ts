@@ -1,9 +1,8 @@
+// src/admin/admin.module.ts
 import { Module } from '@nestjs/common';
-import { AdminSellersController } from './controllers/admin-sellers.controller';
+import { AdminController } from './admin.controller';
 
 @Module({
-  controllers: [AdminSellersController]
+  controllers: [AdminController],
 })
-export class AdminModule {
-  // constructor حذف شده
-}
+export class AdminModule {}
