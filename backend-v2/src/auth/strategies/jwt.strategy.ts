@@ -9,19 +9,30 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'secretKey',
+      secretOrKey: process.env.JWT_SECRET || 'chinbino-super-secret-key-2024-v2',
     });
   }
 
   async validate(payload: any) {
-    const user = await this.usersService.findOne(payload.sub);
+    // payload.sub باید userId باشه
+    const userId = payload.sub;
+    
+    const user = await this.usersService.findOne(userId);
     if (!user) {
-      console.log('User not found for ID:', payload.sub);
       throw new UnauthorizedException('User not found');
     }
-    if (!user.isActive) { // ✅ استفاده از isActive
+    if (!user.isActive) {
       throw new UnauthorizedException('User account is not active');
     }
-    return user;
+    
+    // این ساختار مهمه: باید id داشته باشه
+    return {
+      id: user.id,           // مهمترین فیلد
+      userId: user.id,       // جایگزین
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      status: user.status
+    };
   }
 }
