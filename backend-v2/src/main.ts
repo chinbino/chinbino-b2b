@@ -7,64 +7,39 @@ import { existsSync, readdirSync } from 'fs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
-  console.log('🏗️  ========== راه‌اندازی با ساختار واقعی پروژه ==========');
+  console.log('🔧 ========== راه‌اندازی Phase C2.1 ==========');
   
-  // مسیر REAL در dist (بعد از build)
-  const REAL_VIEWS_PATH = join(__dirname, 'views/admin');
+  // مسیر views در dist
+  const viewsPath = join(__dirname, 'views/admin');
   
-  console.log('📁 __dirname (محل dist/main.js):', __dirname);
-  console.log('📁 مسیر REAL views:', REAL_VIEWS_PATH);
-  console.log('📁 وجود دارد؟', existsSync(REAL_VIEWS_PATH));
+  console.log('📁 مسیر views:', viewsPath);
+  console.log('📁 وجود دارد؟', existsSync(viewsPath));
   
-  // دیباگ: بررسی ساختار dist
-  if (existsSync(REAL_VIEWS_PATH)) {
-    const files = readdirSync(REAL_VIEWS_PATH);
-    console.log(`✅ ${files.length} فایل موجود:`, files.join(', '));
-    
-    // بررسی layouts
-    const layoutsPath = join(REAL_VIEWS_PATH, 'layouts');
-    if (existsSync(layoutsPath)) {
-      console.log('📁 layouts:', readdirSync(layoutsPath));
-    }
+  if (existsSync(viewsPath)) {
+    const files = readdirSync(viewsPath);
+    console.log(`📄 ${files.length} فایل موجود:`, files.join(', '));
   } else {
-    console.log('⚠️ مسیر views در dist وجود ندارد');
-    console.log('📁 محتوای __dirname:', readdirSync(__dirname));
-    
-    // بررسی مسیرهای ممکن
-    const checkPaths = [
-      join(__dirname, 'views/admin'),
-      join(__dirname, 'admin/views'),
-      join(process.cwd(), 'dist/views/admin'),
-      join(process.cwd(), 'src/admin/views')
-    ];
-    
-    console.log('🔍 بررسی مسیرهای ممکن:');
-    checkPaths.forEach((p, i) => {
-      console.log(`  ${i + 1}. ${p} - ${existsSync(p) ? '✅' : '❌'}`);
-    });
+    console.log('⚠️ مسیر views در dist وجود ندارد (ممکن است در حال build باشد)');
   }
   
-  // تنظیم مسیر - حتماً REAL_VIEWS_PATH
-  app.setBaseViewsDir(REAL_VIEWS_PATH);
+  app.setBaseViewsDir(viewsPath);
   app.setViewEngine('hbs');
   
-  // ثبت helper
+  // ✅ فقط این helper - inline function
   const hbs = require('hbs');
-  hbs.registerHelper('eq', function(a, b, options) {
-    return a === b ? options.fn(this) : options.inverse(this);
-  });
+  hbs.registerHelper('eq', (a, b) => a === b);
   
-  console.log('✅ Handlebars تنظیم شد');
-  console.log('===============================================\n');
+  console.log('✅ Handlebars با helper eq تنظیم شد');
+  console.log('========================================\n');
   
   const port = process.env.PORT || 10000;
   await app.listen(port);
   
-  console.log('\n🎊 ========== Phase C2.1 - ساختار واقعی ==========');
+  console.log('\n🎉 ========== Phase C2.1 کامل شد ==========');
   console.log(`🌐 پورت: ${port}`);
   console.log(`🛒 پنل ادمین: https://chinbino-api-v2.onrender.com/admin/sellers`);
-  console.log(`📁 مسیر views: ${REAL_VIEWS_PATH}`);
-  console.log('===============================================\n');
+  console.log(`📁 مسیر views: ${viewsPath}`);
+  console.log('========================================\n');
 }
 
 bootstrap();
