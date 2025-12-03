@@ -1,12 +1,14 @@
+// src/auth/dto/register.dto.ts - اصلاح شده
 import { IsEmail, IsString, MinLength, IsOptional, IsEnum } from 'class-validator';
 
 export class RegisterDto {
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
   @MinLength(6)
-  password: string; // این فیلد باید وجود داشته باشد
+  password: string;
 
   @IsString()
   fullName: string;
@@ -19,6 +21,7 @@ export class RegisterDto {
   @IsOptional()
   companyName?: string;
 
-  @IsEnum(['buyer', 'seller'])
-  role: 'buyer' | 'seller';
+  @IsEnum(['buyer', 'seller', 'admin']) // ✅ admin اضافه شد
+  @IsOptional()
+  role?: 'buyer' | 'seller' | 'admin'; // ✅ نوع رو به‌روز کن
 }
