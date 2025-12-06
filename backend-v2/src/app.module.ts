@@ -21,8 +21,9 @@ import { SuppliersModule } from './suppliers/suppliers.module';
         const connectionConfig: any = {
           type: 'postgres',
           autoLoadEntities: true,
-          synchronize: true,
-          migrationsRun: false,
+          synchronize: false,
+          migrationsRun: true,
+          migrations: ['dist/migrations/*.js'],
           ssl: { rejectUnauthorized: false },
           extra: {
             max: 10,
