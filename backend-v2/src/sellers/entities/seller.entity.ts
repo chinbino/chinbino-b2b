@@ -1,86 +1,44 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-} from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Product } from '../../products/entities/product.entity';
+// src/sellers/entities/seller.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export enum SellerStatus {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
-}
-
-@Entity({ name: 'sellers' })
+@Entity('sellers')
 export class Seller {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'name_zh', type: 'varchar', length: 255 })
-  nameZh: string;
+  @Column({ nullable: true })
+  name_zh: string;
 
-  @Column({ name: 'name_fa', type: 'varchar', length: 255, nullable: true })
-  nameFa?: string;
+  @Column({ nullable: true })
+  name_fa: string;
 
-  @Column({ name: 'company_name', type: 'varchar', length: 255, nullable: true })
-  companyName?: string;
+  @Column({ nullable: true })
+  company_name: string;
 
-  @Column({ 
-    name: 'status',
-    type: 'enum',
-    enum: SellerStatus,
-    default: SellerStatus.PENDING
-  })
-  status: SellerStatus;
+  @Column({ nullable: true })
+  contact_person: string;
 
-  @Column({ name: 'contact_name', type: 'varchar', length: 255, nullable: true })
-  contactName?: string;
+  @Column({ nullable: true })
+  phone: string;
 
-  @Column({ name: 'contact_phone', type: 'varchar', length: 100, nullable: true })
-  contactPhone?: string;
+  @Column({ nullable: true })
+  wechat_id: string;
 
-  @Column({ name: 'wechat_id', type: 'varchar', length: 255, nullable: true })
-  wechatId?: string;
+  @Column({ nullable: true })
+  aliwangwang_id: string;
 
-  // 🔴 فیلد جدید اختیاری
-  @Column({ name: 'contact_email', type: 'varchar', length: 255, nullable: true })
-  contactEmail?: string;
+  @Column({ nullable: true })
+  location: string;
 
-  @Column({ name: 'contact_person', type: 'varchar', length: 255, nullable: true })
-  contactPerson?: string;
+  @Column('text', { nullable: true })
+  description_zh: string;
 
-  @Column({ name: 'phone', type: 'varchar', length: 100, nullable: true })
-  phone?: string;
+  @Column('text', { nullable: true })
+  description_fa: string;
 
-  @Column({ name: 'aliwangwang_id', type: 'varchar', length: 255, nullable: true })
-  aliwangwangId?: string;
+  @CreateDateColumn()
+  created_at: Date;
 
-  @Column({ name: 'location', type: 'varchar', length: 255, nullable: true })
-  location?: string;
-
-  @Column({ name: 'description_zh', type: 'text', nullable: true })
-  descriptionZh?: string;
-
-  @Column({ name: 'description_fa', type: 'text', nullable: true })
-  descriptionFa?: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt?: Date;
-
-  @OneToMany(() => User, (user) => user.seller)
-  users: User[];
-
-  @OneToMany(() => Product, (product) => product.seller)
-  products: Product[];
+  @UpdateDateColumn()
+  updated_at: Date;
 }
