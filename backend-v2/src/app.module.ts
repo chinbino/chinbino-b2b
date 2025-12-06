@@ -10,7 +10,7 @@ import { CmsModule } from './cms/cms.module';
 import { AdminModule } from './admin/admin.module';
 import { SellersModule } from './sellers/sellers.module';
 import { TestModule } from './test/test.module';
-// import { SuppliersModule } from './suppliers/suppliers.module'; // ❌ کامنت شد
+import { SuppliersModule } from './suppliers/suppliers.module';
 import { dataSourceOptions } from './database/data-source';
 
 @Module({
@@ -23,7 +23,7 @@ import { dataSourceOptions } from './database/data-source';
     AdminModule,
     SellersModule,
     TestModule,
-    // SuppliersModule, // ❌ کامنت شد
+    SuppliersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
