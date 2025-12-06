@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
-    "build": "npx nest build && node copy-views.js",
+    "build": "tsc && node copy-views.js",
     "start": "node dist/main",
     "start:prod": "node dist/main"
   },
@@ -29,7 +29,7 @@
     "@types/node": "^20.11.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.2.8",
+    "typescript": "^5.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/passport-jwt": "^3.0.9",
     "@types/passport-local": "^1.0.35"
