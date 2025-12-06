@@ -26,9 +26,16 @@ export class SuppliersService {
     return await this.suppliersRepository.save(supplier);
   }
 
-  async findAll(): Promise<Supplier[]> {
+  async findAll(verifiedOnly?: boolean): Promise<Supplier[]> {
+    const where: any = { isActive: true };
+    
+    // اگر verifiedOnly برابر true باشد، فقط verifiedها را بیاور
+    if (verifiedOnly !== undefined && verifiedOnly === true) {
+      where.verificationStatus = 'verified';
+    }
+    
     return await this.suppliersRepository.find({
-      where: { isActive: true },
+      where,
       order: { createdAt: 'DESC' }
     });
   }
