@@ -1,13 +1,11 @@
+// src/users/entities/user.entity.ts
 import { 
   Entity, 
   Column, 
   PrimaryGeneratedColumn, 
   CreateDateColumn, 
-  UpdateDateColumn, 
-  ManyToOne,
-  JoinColumn 
+  UpdateDateColumn
 } from 'typeorm';
-import { Seller } from '../../sellers/entities/seller.entity';
 
 @Entity('users')
 export class User {
@@ -65,13 +63,6 @@ export class User {
     default: 'IRR'
   })
   preferredCurrency: string;
-
-  @ManyToOne(() => Seller, (seller) => seller.users, {
-    nullable: true,
-    onDelete: 'SET NULL'
-  })
-  @JoinColumn({ name: 'seller_id' })
-  seller: Seller;
 
   @Column({ name: 'seller_id', type: 'int', nullable: true })
   sellerId: number;
