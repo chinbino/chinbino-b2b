@@ -6,11 +6,9 @@ import {
   CreateDateColumn, 
   UpdateDateColumn,
   OneToOne,
-  JoinColumn,
-  OneToMany
+  JoinColumn
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Product } from '../../products/entities/product.entity';
 
 @Entity('suppliers')
 export class Supplier {
@@ -27,7 +25,7 @@ export class Supplier {
   phone: string;
 
   @Column()
-  country: string; // 'iran' یا 'china'
+  country: string;
 
   @Column('text', { nullable: true })
   description: string;
@@ -57,18 +55,12 @@ export class Supplier {
   @Column({ default: true })
   isActive: boolean;
 
-  // رابطه با User
   @OneToOne(() => User, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ name: 'user_id' })
   userId: string;
-
-  // رابطه با Products
-@OneToMany(() => Product, (product) => product.supplier)
-products: Product[];
- 
 
   @CreateDateColumn()
   createdAt: Date;
