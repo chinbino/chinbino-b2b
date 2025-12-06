@@ -1,39 +1,39 @@
-
-json
 {
-  "name": "chinbino-backend-v2",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "npx nest build && node copy-views.js",
-    "start": "node dist/main",
-    "start:prod": "node dist/main"
-  },
-  "dependencies": {
-    "@nestjs/common": "^8.4.7",
-    "@nestjs/core": "^8.4.7",
-    "@nestjs/platform-express": "^8.4.7",
-    "@nestjs/typeorm": "^8.1.4",
-    "@nestjs/jwt": "^8.0.1",
-    "@nestjs/passport": "^8.2.2",
-    "@nestjs/config": "^1.2.1",
-    "typeorm": "^0.3.12",
-    "pg": "^8.8.0",
-    "passport": "^0.6.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0",
-    "bcrypt": "^5.1.0",
-    "class-validator": "^0.13.2",
-    "class-transformer": "^0.5.1",
-    "hbs": "^4.2.0",
-    "ts-node": "^10.9.1",
-    "dotenv": "^16.0.3"
-  },
-  "devDependencies": {
-    "@nestjs/cli": "^8.2.8",
-    "@types/bcrypt": "^5.0.0",
-    "@types/passport-jwt": "^3.0.9",
-    "@types/passport-local": "^1.0.35",
-    "@types/node": "^20.0.0"
-  }
+"name": "chinbino-backend-v2",
+"version": "1.0.0",
+"description": "B2B Backend V2 - Clean Architecture",
+"main": "dist/main.js",
+"scripts": {
+"build": "nest build && node copy-views.js",
+"start": "node dist/main.js",
+"start:prod": "node dist/main.js"
+},
+"dependencies": {
+"@nestjs/common": "^8.4.7",
+"@nestjs/core": "^8.4.7",
+"@nestjs/platform-express": "^8.4.7",
+"@nestjs/typeorm": "^8.1.4",
+"@nestjs/jwt": "^8.0.1",
+"@nestjs/passport": "^8.2.2",
+"@nestjs/config": "^1.2.1",
+"@nestjs/cli": "^8.2.8",
+"typeorm": "^0.3.12",
+"pg": "^8.8.0",
+"passport": "^0.6.0",
+"passport-jwt": "^4.0.1",
+"passport-local": "^1.0.0",
+"bcrypt": "^5.1.0",
+"class-validator": "^0.13.2",
+"class-transformer": "^0.5.1",
+"hbs": "^4.2.0",
+"ts-node": "^10.9.1",
+"dotenv": "^16.0.3"
+},
+"devDependencies": {
+"@nestjs/cli": "^8.2.8",
+"@types/bcrypt": "^5.0.0",
+"@types/passport-jwt": "^3.0.9",
+"@types/passport-local": "^1.0.35",
+"@types/node": "^20.0.0"
 }
-
+}
