@@ -23,7 +23,7 @@
     "@nestjs/jwt": "^8.0.1",
     "@nestjs/passport": "^8.2.2",
     "@nestjs/config": "^1.2.1",
-    "@nestjs/cli": "^8.2.8",          // ← از devDependencies به اینجا منتقل شد
+    "@nestjs/cli": "^8.2.8",
     "typeorm": "^0.3.12",
     "pg": "^8.8.0",
     "passport": "^0.6.0",
