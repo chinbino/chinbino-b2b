@@ -1,3 +1,4 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -14,10 +15,7 @@ import { dataSourceOptions } from './database/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      ...dataSourceOptions,
-      synchronize: true, // ✅ این خط اضافه شد
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     ProductsModule,
     UsersModule,
     AuthModule,
