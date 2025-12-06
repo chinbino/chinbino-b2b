@@ -1,8 +1,36 @@
 // src/suppliers/dto/update-supplier.dto.ts
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSupplierDto } from './create-supplier.dto';
+import { IsString, IsOptional, IsIn } from 'class-validator';
 
-export class UpdateSupplierDto extends PartialType(CreateSupplierDto) {
+export class UpdateSupplierDto {
+  @IsString()
+  @IsOptional()
+  companyName?: string;
+
+  @IsString()
+  @IsOptional()
+  businessEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['iran', 'china'])
+  country?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  businessLicenseNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  taxId?: string;
+
   @IsString()
   @IsOptional()
   @IsIn(['pending', 'verified', 'rejected', 'suspended'])
