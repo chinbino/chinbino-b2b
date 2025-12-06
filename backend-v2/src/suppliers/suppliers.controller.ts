@@ -45,7 +45,10 @@ export class SuppliersController {
   // لیست Supplierهای تاییدشده (public)
   @Get()
   async findAll(@Query('all') all: string) {
-    const verifiedOnly = all !== 'true';
+    // اگر all=true باشد، verifiedOnly=false (همه را بیاور)
+    // اگر all نباشد یا false باشد، verifiedOnly=true (فقط verifiedها)
+    const verifiedOnly = !(all === 'true');
+    
     return {
       success: true,
       data: await this.suppliersService.findAll(verifiedOnly)
@@ -122,6 +125,7 @@ export class SuppliersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getStats() {
+    // برای آمار همه supplierها را می‌خواهیم (حتی غیرفعال‌ها)
     const suppliers = await this.suppliersService.findAll(false);
     
     const stats = {
