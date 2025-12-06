@@ -1,5 +1,18 @@
 // src/sellers/entities/seller.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  CreateDateColumn, 
+  UpdateDateColumn 
+} from 'typeorm';
+
+export enum SellerStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
+  SUSPENDED = 'suspended'
+}
 
 @Entity('sellers')
 export class Seller {
@@ -36,9 +49,19 @@ export class Seller {
   @Column('text', { nullable: true })
   description_fa: string;
 
-  @CreateDateColumn()
+  @Column({
+    type: 'enum',
+    enum: SellerStatus,
+    default: SellerStatus.PENDING
+  })
+  status: SellerStatus;
+
+  @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
+
+  @Column({ name: 'deleted_at', nullable: true })
+  deleted_at: Date;
 }
