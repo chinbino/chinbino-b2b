@@ -66,8 +66,9 @@ export class Supplier {
   userId: string;
 
   // رابطه با Products
-  @OneToMany(() => Product, product => product.supplier)
-  products: Product[];
+@OneToMany(() => Product, (product) => product.supplier)
+products: Product[];
+ 
 
   @CreateDateColumn()
   createdAt: Date;
