@@ -1,4 +1,4 @@
-// src/app.module.ts (همین‌طور که هست)
+// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -21,9 +21,8 @@ import { SuppliersModule } from './suppliers/suppliers.module';
         const connectionConfig: any = {
           type: 'postgres',
           autoLoadEntities: true,
-          synchronize: false,
-          migrationsRun: true,
-          migrations: ['dist/migrations/*.js'],
+          synchronize: true,
+          migrationsRun: false,
           ssl: { rejectUnauthorized: false },
           extra: {
             max: 10,
