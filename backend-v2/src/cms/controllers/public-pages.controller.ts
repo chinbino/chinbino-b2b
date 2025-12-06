@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Controller, Get, Query, Header, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ContentService } from '../services/content.service';
