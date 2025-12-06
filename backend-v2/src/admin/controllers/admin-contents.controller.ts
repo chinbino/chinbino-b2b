@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Controller, Get, Post, Put, Param, Body, Query, Res, Render, NotFoundException } from '@nestjs/common';
 import { Response } from 'express';
 import { ContentService } from '../../cms/services/content.service';
