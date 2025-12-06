@@ -6,10 +6,10 @@ export class Supplier {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ name: 'companyName' })  // ← name اضافه کنید
   companyName: string;
 
-  @Column({ unique: true })
+  @Column({ name: 'businessEmail', unique: true })  // ← name اضافه کنید
   businessEmail: string;
 
   @Column({ nullable: true })
@@ -21,18 +21,18 @@ export class Supplier {
   @Column('text', { nullable: true })
   description: string;
 
-  @Column({ default: 'pending' })
+  @Column({ name: 'verificationStatus', default: 'pending' })  // ← name اضافه کنید
   verificationStatus: string;
 
-  @Column()
+  @Column({ name: 'userId' })  // ← این خط را اضافه کنید
   userId: string;
 
-  @Column({ default: true })
+  @Column({ name: 'isActive', default: true })  // ← name اضافه کنید
   isActive: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'createdAt' })  // ← name اضافه کنید
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updatedAt' })  // ← name اضافه کنید
   updatedAt: Date;
 }
