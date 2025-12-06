@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
-    "build": "npx nest build && node copy-views.js",
+    "build": "node_modules/.bin/nest build && node copy-views.js",
     "start": "node dist/main",
-    "start:dev": "npx nest start --watch",
-    "start:prod": "node dist/main",
-    "migration:run": "npx typeorm migration:run --dataSource=src/database/data-source.ts || echo 'Migration skipped'",
-    "migration:generate": "npx typeorm migration:generate --dataSource=src/database/data-source.ts"
+    "start:prod": "node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -30,12 +27,5 @@
     "hbs": "^4.2.0",
     "ts-node": "^10.9.1",
     "dotenv": "^16.0.3"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
-    "@types/passport-jwt": "^3.0.9",
-    "@types/passport-local": "^1.0.35",
-    "@types/hbs": "^4.0.1",
-    "@types/node": "^20.0.0"
   }
 }
