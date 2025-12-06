@@ -7,12 +7,12 @@ config();
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  synchronize: false, // مهم: در production باید false باشد
-  logging: process.env.NODE_ENV === 'development',
+  synchronize: true, // ✅ موقتاً true برای ساخت جدول suppliers
+  logging: process.env.NODE_ENV !== 'production',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/../migrations/*{.ts,.js}'], // ✅ اصلاح مسیر
   migrationsTableName: 'typeorm_migrations',
-  migrationsRun: true, // اجرای خودکار migrations
+  migrationsRun: false, // ❌ موقتاً false
   ssl: process.env.NODE_ENV === 'production' ? {
     rejectUnauthorized: false
   } : false,
