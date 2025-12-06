@@ -1,4 +1,4 @@
-// src/app.module.ts
+// src/app.module.ts (همین‌طور که هست)
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
