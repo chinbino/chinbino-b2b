@@ -14,7 +14,10 @@ import { dataSourceOptions } from './database/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRoot({
+      ...dataSourceOptions,
+      synchronize: true, // ✅ این خط اضافه شد
+    }),
     ProductsModule,
     UsersModule,
     AuthModule,
