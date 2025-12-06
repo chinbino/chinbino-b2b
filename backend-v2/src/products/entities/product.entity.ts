@@ -1,14 +1,7 @@
-// src/products/entities/product.entity.ts
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
-  CreateDateColumn, 
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn
-} from 'typeorm';
-import { Seller } from '../../sellers/entities/seller.entity';
+// @ts-nocheck
+// TEMPORARY: Product entity disabled for Supplier-only system
+
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('products')
 export class Product {
@@ -16,32 +9,13 @@ export class Product {
   id: string;
 
   @Column()
-  name_zh: string;
-
-  @Column({ nullable: true })
-  name_fa: string;
-
-  @Column('text', { nullable: true })
-  description_zh: string;
-
-  @Column('text', { nullable: true })
-  description_fa: string;
+  name: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  price_cny: number;
-
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
-  price_irr: number;
+  price: number;
 
   @Column({ default: true })
   is_active: boolean;
-
-  @ManyToOne(() => Seller, (seller) => seller.products, { nullable: true })
-  @JoinColumn({ name: 'seller_id' })
-  seller: Seller;
-
-  @Column({ name: 'seller_id', nullable: true })
-  seller_id: number;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
