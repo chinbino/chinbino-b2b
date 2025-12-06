@@ -33,7 +33,6 @@
     "@types/bcrypt": "^5.0.0",
     "@types/passport-jwt": "^3.0.9",
     "@types/passport-local": "^1.0.35",
-    "@types/hbs": "^4.0.1",
     "@types/node": "^20.0.0"
   }
 }
