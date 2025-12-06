@@ -1,28 +1,45 @@
-// src/app.module.ts
+// src/app.module.ts (بخش TypeORM)
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { CmsModule } from './cms/cms.module';
-import { AdminModule } from './admin/admin.module';
-import { SellersModule } from './sellers/sellers.module';
-import { TestModule } from './test/test.module';
+import { UsersModule } from './users/users.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
-import { dataSourceOptions } from './database/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dataSourceOptions),
-    ProductsModule,
-    UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT, 10) || 5432,
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'chinbino',
+      
+      // autoLoadEntities باید true باشد
+      autoLoadEntities: true,
+      
+      // در production همیشه false
+      synchronize: false,
+      
+      // migrationها اجرا شوند
+      migrationsRun: true,
+      
+      // مسیر migrationها
+      migrations: ['dist/migrations/*.js'],
+      
+      // لاگ‌گیری
+      logging: process.env.NODE_ENV === 'development',
+    }),
+    
     AuthModule,
-    CmsModule,
-    AdminModule,
-    SellersModule,
-    TestModule,
+    UsersModule,
     SuppliersModule,
   ],
   controllers: [AppController],
