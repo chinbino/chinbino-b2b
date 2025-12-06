@@ -64,9 +64,6 @@ export class User {
   })
   preferredCurrency: string;
 
-  @Column({ name: 'seller_id', type: 'int', nullable: true })
-  sellerId: number;
-
   @CreateDateColumn()
   createdAt: Date;
 
