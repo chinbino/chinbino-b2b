@@ -1,12 +1,12 @@
+
+json
 {
   "name": "chinbino-backend-v2",
   "version": "1.0.0",
-  "description": "B2B Backend V2 - Clean Architecture",
   "scripts": {
     "build": "npx nest build && node copy-views.js",
     "start": "node dist/main",
-    "start:prod": "node dist/main",
-    "start:dev": "npx nest start --watch"
+    "start:prod": "node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -36,3 +36,4 @@
     "@types/node": "^20.0.0"
   }
 }
+
