@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { OrdersModule } from './orders/orders.module'; // ✅ اتصال ماژول سفارش‌ها
+import { MigrationRunnerController } from './migration-runner.controller'; // ✅ Controller اجرای Migrationها
 
 @Module({
   imports: [
@@ -71,7 +72,7 @@ import { OrdersModule } from './orders/orders.module'; // ✅ اتصال ماژ�
     SuppliersModule,
     OrdersModule, // ✅ فعال شد
   ],
-  controllers: [AppController],
+  controllers: [AppController, MigrationRunnerController], // ✅ اضافه شد
   providers: [AppService],
 })
 export class AppModule {}
