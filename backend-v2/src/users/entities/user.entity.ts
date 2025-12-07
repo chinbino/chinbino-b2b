@@ -1,75 +1,32 @@
-// src/users/entities/user.entity.ts
-import { 
-  Entity, 
-  Column, 
-  PrimaryGeneratedColumn, 
-  CreateDateColumn, 
-  UpdateDateColumn
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
+export enum UserRole {
+  BUYER = 'buyer',
+  SUPPLIER = 'supplier',
+  ADMIN = 'admin',
+}
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true, unique: true })
-  phone: string;
-
   @Column()
-  passwordHash: string;
+  password: string;
 
   @Column({
     type: 'enum',
-   enum: ['buyer', 'supplier', 'admin'], // seller → supplier
-    default: 'buyer'
+    enum: UserRole,
+    default: UserRole.BUYER,
   })
-  role: string;
-
-  @Column({
-    type: 'enum', 
-    enum: ['pending', 'active', 'suspended'],
-    default: 'pending'
-  })
-  status: string;
-
-  @Column({ default: true })
-  isActive: boolean;
-
-  @Column({ nullable: true })
-  fullName: string;
-
-  @Column({ nullable: true })
-  companyName: string;
-
-  @Column({ default: false })
-  isEmailVerified: boolean;
-
-  @Column({ default: false })
-  isPhoneVerified: boolean;
-
-  @Column({
-    type: 'enum',
-    enum: ['fa', 'zh', 'en'],
-    default: 'fa'
-  })
-  preferredLanguage: string;
-
-  @Column({
-    type: 'enum',
-    enum: ['CNY', 'IRR', 'USD'],
-    default: 'IRR'
-  })
-  preferredCurrency: string;
+  role: UserRole;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
-
-  @Column({ nullable: true })
-  lastLoginAt: Date;
+  updated_at: Date;
 }
