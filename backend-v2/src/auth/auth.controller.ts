@@ -12,6 +12,7 @@ export class AuthController {
       body.email,
       body.password,
     );
+
     return this.authService.login(user);
   }
 
