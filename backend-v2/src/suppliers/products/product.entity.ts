@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Supplier } from '../supplier.entity';
+import { Supplier } from '../supplier.entity'; // مسیر واقعی Supplier خودت را چک کن
 
 export enum ProductStatus {
   ACTIVE = 'active',
@@ -8,7 +8,7 @@ export enum ProductStatus {
 
 @Entity('products')
 export class Product {
-  @PrimaryGeneratedColumn('uuid', { default: () => 'gen_random_uuid()' })
+  @PrimaryGeneratedColumn('uuid') // برای gen_random_uuid() قبلاً در migration استفاده می‌کنیم
   id: string;
 
   @Column()
@@ -29,8 +29,8 @@ export class Product {
   @Column({ type: 'enum', enum: ProductStatus, default: ProductStatus.ACTIVE })
   status: ProductStatus;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.products, { onDelete: 'CASCADE' })
-  supplier: Supplier;
+  @ManyToOne(() => Supplier, (supplier: any) => supplier.products, { onDelete: 'CASCADE' })
+  supplier: Supplier | any;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -38,4 +38,3 @@ export class Product {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
-
