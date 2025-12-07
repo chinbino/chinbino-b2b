@@ -1,49 +1,40 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Product, ProductStatus } from './product.entity';
-import { Supplier } from '../entities/supplier.entity'; // مسیر اصلاح شد
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from './product.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    private readonly productRepo: Repository<Product>,
   ) {}
 
-  async create(supplier: Supplier, data: Partial<Product>): Promise<Product> {
-    const product = this.productRepository.create({
-      ...data,
-      supplier,
-    });
-    return this.productRepository.save(product);
+  async create(createDto: CreateProductDto, supplierId: string): Promise<Product> {
+    const product = this.productRepo.create({ ...createDto, supplierId });
+    return this.productRepo.save(product);
   }
 
-  async findAll(supplier?: Supplier): Promise<Product[]> {
-    if (supplier) {
-      return this.productRepository.find({ where: { supplier } });
-    }
-    return this.productRepository.find();
+  async findAll(): Promise<Product[]> {
+    return this.productRepo.find();
   }
 
-  async findOne(id: string, supplier?: Supplier): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<Product> {
+    const product = await this.productRepo.findOne({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
-    if (supplier && product.supplier.id !== supplier.id) {
-      throw new ForbiddenException('Access denied');
-    }
     return product;
   }
 
-  async update(id: string, supplier: Supplier, data: Partial<Product>): Promise<Product> {
-    const product = await this.findOne(id, supplier);
-    Object.assign(product, data);
-    return this.productRepository.save(product);
+  async update(id: string, updateDto: UpdateProductDto): Promise<Product> {
+    const product = await this.findOne(id);
+    Object.assign(product, updateDto);
+    return this.productRepo.save(product);
   }
 
-  async remove(id: string, supplier: Supplier): Promise<void> {
-    const product = await this.findOne(id, supplier);
-    product.status = ProductStatus.INACTIVE;
-    await this.productRepository.save(product);
+  async remove(id: string): Promise<void> {
+    const product = await this.findOne(id);
+    await this.productRepo.remove(product);
   }
 }
