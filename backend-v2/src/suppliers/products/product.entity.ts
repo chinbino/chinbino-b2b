@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Supplier } from '../entities/supplier.entity';
 
 export enum ProductStatus {
@@ -29,8 +29,12 @@ export class Product {
   @Column({ type: 'enum', enum: ProductStatus, default: ProductStatus.ACTIVE })
   status: ProductStatus;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Supplier, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'supplierId' }) // اضافه شد
   supplier: Supplier;
+
+  @Column()
+  supplierId: string; // ستون واقعی Foreign Key
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
