@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from "typeorm";
 
 export class CreateOrderAndOrderItem1750000000000 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -25,7 +25,6 @@ export class CreateOrderAndOrderItem1750000000000 implements MigrationInterface 
                     { name: "id", type: "bigserial", isPrimary: true },
                     { name: "orderId", type: "bigint", isNullable: false },
                     { name: "productId", type: "bigint", isNullable: false },
-                    { name: "supplierId", type: "bigint", isNullable: false },
                     { name: "quantity", type: "int", default: 1 },
                     { name: "price", type: "numeric", default: 0 },
                     { name: "createdAt", type: "timestamp", default: "now()" },
@@ -34,6 +33,19 @@ export class CreateOrderAndOrderItem1750000000000 implements MigrationInterface 
             }),
             true
         );
+
+        // اضافه کردن ستون supplierId به order_items (اگر وجود ندارد)
+        const table = await queryRunner.getTable("order_items");
+        if (!table!.columns.find(c => c.name === "supplierId")) {
+            await queryRunner.addColumn(
+                "order_items",
+                new TableColumn({
+                    name: "supplierId",
+                    type: "bigint",
+                    isNullable: false
+                })
+            );
+        }
 
         // Foreign Key: order_items → orders
         const fkOrder = new TableForeignKey({
@@ -53,8 +65,7 @@ export class CreateOrderAndOrderItem1750000000000 implements MigrationInterface 
             name: "FK_order_items_suppliers"
         });
 
-        // بررسی و اضافه کردن Foreign Key ها اگر وجود ندارند
-        const table = await queryRunner.getTable("order_items");
+        // اضافه کردن Foreign Key ها اگر وجود ندارند
         if (!table!.foreignKeys.find(fk => fk.name === "FK_order_items_orders")) {
             await queryRunner.createForeignKey("order_items", fkOrder);
         }
