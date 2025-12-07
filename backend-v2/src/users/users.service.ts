@@ -22,6 +22,11 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
 
+  async validateUser(email: string, password: string) {
+    const user = await this.findByEmail(email);
+    return user;
+  }
+
   async create(data: Partial<User>): Promise<User> {
     const user = this.usersRepository.create({
       ...data,
