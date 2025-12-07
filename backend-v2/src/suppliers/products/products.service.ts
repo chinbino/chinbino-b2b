@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product, ProductStatus } from './product.entity';
-import { Supplier } from '../entities/supplier.entity';
+import { Supplier } from '../entities/supplier.entity'; // مسیر اصلاح شد
 
 @Injectable()
 export class ProductsService {
