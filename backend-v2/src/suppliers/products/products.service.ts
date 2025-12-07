@@ -47,4 +47,3 @@ export class ProductsService {
     await this.productRepository.save(product);
   }
 }
-
