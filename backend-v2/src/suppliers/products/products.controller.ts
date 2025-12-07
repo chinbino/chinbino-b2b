@@ -1,42 +1,38 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
+import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { Supplier } from '../entities/supplier.entity';
-import { Product } from './product.entity';
 
-@Controller('suppliers/products')
 @UseGuards(JwtAuthGuard)
+@Controller('suppliers/products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @Roles('supplier')
-  create(@Body() data: Partial<Product>, @Param('supplier') supplier: Supplier): Promise<Product> {
-    return this.productsService.create(supplier, data);
+  create(@Body() createDto: CreateProductDto, @CurrentUser() supplier: Supplier) {
+    return this.productsService.create(createDto, supplier.id);
   }
 
   @Get()
-  @Roles('supplier')
-  findAll(@Param('supplier') supplier: Supplier): Promise<Product[]> {
-    return this.productsService.findAll(supplier);
+  findAll() {
+    return this.productsService.findAll();
   }
 
   @Get(':id')
-  @Roles('supplier')
-  findOne(@Param('id') id: string, @Param('supplier') supplier: Supplier): Promise<Product> {
-    return this.productsService.findOne(id, supplier);
+  findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles('supplier')
-  update(@Param('id') id: string, @Param('supplier') supplier: Supplier, @Body() data: Partial<Product>): Promise<Product> {
-    return this.productsService.update(id, supplier, data);
+  update(@Param('id') id: string, @Body() updateDto: UpdateProductDto) {
+    return this.productsService.update(id, updateDto);
   }
 
   @Delete(':id')
-  @Roles('supplier')
-  remove(@Param('id') id: string, @Param('supplier') supplier: Supplier): Promise<void> {
-    return this.productsService.remove(id, supplier);
+  remove(@Param('id') id: string) {
+    return this.productsService.remove(id);
   }
 }
