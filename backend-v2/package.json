@@ -6,15 +6,18 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-   "build": "tsc && node copy-views.js",
+    "build": "tsc && node copy-views.js",
     "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "migration:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
-    "migration:run": "npm run typeorm migration:run -- -d src/data-source.ts",
-    "migration:revert": "npm run typeorm migration:revert -- -d src/data-source.ts",
-    "migration:show": "npm run typeorm migration:show -- -d src/data-source.ts"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration:generate": "npm run typeorm -- migration:generate -d src/data-source.ts -n",
+    "migration:run": "npm run typeorm -- migration:run -d src/data-source.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/data-source.ts",
+    "migration:show": "npm run typeorm -- migration:show -d src/data-source.ts",
+    "db:migrate": "npm run migration:run",
+    "db:generate": "npm run migration:generate",
+    "deploy:prod": "npm run build && npm run start:prod"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -46,6 +49,7 @@
     "@nestjs/schematics": "^10.0.0",
     "@types/node": "^20.8.10",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   }
 }
