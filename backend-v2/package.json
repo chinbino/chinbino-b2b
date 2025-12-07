@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "tsc --skipLibCheck --skipDefaultLibCheck --noEmitOnError false && node copy-views.js",
+   "build": "tsc && node copy-views.js",
     "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
