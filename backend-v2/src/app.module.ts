@@ -4,20 +4,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
+import { OrdersModule } from './orders/orders.module'; // ✅ اتصال ماژول سفارش‌ها
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
-        
+
         const connectionConfig: any = {
           type: 'postgres',
           autoLoadEntities: true,
@@ -31,7 +33,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
           },
           logging: ['error', 'warn'],
         };
-        
+
         if (databaseUrl) {
           try {
             const urlWithoutProtocol = databaseUrl.replace('postgresql://', '');
@@ -39,7 +41,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
             const [username, password] = credentials.split(':');
             const [hostPort, database] = hostAndDb.split('/');
             const [host, port] = hostPort.split(':');
-            
+
             connectionConfig.host = host;
             connectionConfig.port = parseInt(port || '5432');
             connectionConfig.username = username;
@@ -59,14 +61,15 @@ import { SuppliersModule } from './suppliers/suppliers.module';
           connectionConfig.password = 'FwL7Hjpq8YMA0y8hmNKX20JLlK4eo43C';
           connectionConfig.database = 'chinbino';
         }
-        
+
         return connectionConfig;
       },
     }),
-    
+
     AuthModule,
     UsersModule,
     SuppliersModule,
+    OrdersModule, // ✅ فعال شد
   ],
   controllers: [AppController],
   providers: [AppService],
