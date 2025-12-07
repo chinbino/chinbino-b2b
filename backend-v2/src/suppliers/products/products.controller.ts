@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { AuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../../auth/guards/jwt.strategy.guard'; // مسیر واقعی خودت را جایگزین کن
+import { CurrentUser } from '../../auth/decorators/current-user.decorator'; // مسیر واقعی خودت
 import { Supplier } from '../supplier.entity';
 import { Product } from './product.entity';
 
 @Controller('suppliers/products')
-@UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -35,4 +35,3 @@ export class ProductsController {
     return this.productsService.remove(id, supplier);
   }
 }
-
